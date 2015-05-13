@@ -1,0 +1,36 @@
+{
+  "name": "tfmm",
+  "version": "0.0.1",
+  "license": "MIT",
+  "homepage": "http://tfmm.loop.coop/",
+  "author": "Rich Plastow <rich@loop.coop> (http://loop.coop/)",
+  "description": "Touchy Feely Music Makey",
+  "main": "./build/tfmm.js",
+  "bin":{
+    "apage": "./bin/apage",
+    "akaybe-build": "./bin/akaybe-build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loopdotcoop/tfmm.git"
+  },
+  "keywords": [
+    "audio",
+    "sampler",
+    "sequencer",
+    "visualiser",
+    "coffeescript",
+    "litcoffee"
+  ],
+  "devDependencies": {
+    "coffee-script": "latest",
+    "nodemon": "latest"
+  },
+  "scripts": {
+    "build": "node bin/akaybe-build",
+    "test": "node test/run-test.js",
+    "index": "./bin/apage -i README.md doc/*.md -o index.html -t Tfmm",
+    "v:list": "grep -ron $npm_package_version {bin,src,*.json} | awk 1 ORS=' ' | sed \"s@:$npm_package_version@@g\"",
+    "v:open": "subl $(npm run v:list --loglevel silent)"
+  }
+}

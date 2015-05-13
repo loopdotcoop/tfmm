@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Tfmm</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <meta name="generator" content="Apage 0.0.15 http://apage.richplastow.com/">
+  <style>
+    /* Apage was configured with no plugins, so no CSS is injected here */
+  </style>
+
+</head>
+<body>
+
+  <article id="apage_doc_documentation"
+        class="apage"
+  data-apage-opath="/doc/00-documentation.md"
+  data-apage-dname="_doc_"
+  data-apage-order="0"
+  data-apage-front='[]'
+  data-apage-title="Documentation">
+  <h1>Documentation</h1>
+  <ul>
+  <li><a href="">Home</a> </li>
+  <li><a href="#/doc/installing-tfmm">Installing Tfmm</a> </li>
+  <li><a href="#/doc/testing-tfmm">Testing Tfmm</a> </li>
+  <li><a href="#/doc/installing-build-tools">Installing Build Tools</a> </li>
+  <li><a href="#/doc/the-build-process">The Build Process</a> </li>
+  <li><a href="#/doc/handy-scripts">Handy Scripts</a></li>
+  </ul>
+  
+  </article><!-- / #apage_doc_documentation -->
+
+
+  <article id="apage_doc_installing-tfmm"
+        class="apage"
+  data-apage-opath="/doc/01-installing-tfmm.md"
+  data-apage-dname="_doc_"
+  data-apage-order="1"
+  data-apage-front='[]'
+  data-apage-title="Installing Tfmm">
+  <h1>Installing Tfmm</h1>
+  <p>Old fashioned browser install, providing <code>window.Tfmm</code>: </p>
+  <pre><code class="lang-html">&lt;script src=&quot;http://tfmm.loop.coop/build/tfmm.js&quot;&gt;&lt;/script&gt;
+  &lt;script&gt;console.log( new window.Tfmm().I ); // -&gt; &#39;Tfmm&#39;&lt;/script&gt;
+  </code></pre>
+  <p>Install as a <a href="http://goo.gl/ZrbaB0">CommonJS Module</a>, eg for 
+  <a href="https://nodejs.org/">Node</a>: </p>
+  <pre><code class="lang-javascript">var Tfmm = require(&#39;tfmm&#39;);
+  console.log( new Tfmm().I ); // -&gt; &#39;Tfmm&#39;
+  </code></pre>
+  <p>Install using <a href="http://goo.gl/mp7Snw">RequireJS inline-style</a>, providing <code>Tfmm</code> 
+  as an argument: </p>
+  <pre><code class="lang-html">&lt;script src=&quot;lib/require.js&quot;&gt;&lt;/script&gt;
+  &lt;script&gt;
+    require([&#39;path/to/tfmm&#39;], function(Tfmm) {
+      console.log( new Tfmm().I ); // -&gt; &#39;Tfmm&#39;
+    })
+  &lt;/script&gt;
+  </code></pre>
+  <p>@todo more installation examples</p>
+  
+  </article><!-- / #apage_doc_installing-tfmm -->
+
+
+  <article id="apage_doc_testing-tfmm"
+        class="apage"
+  data-apage-opath="/doc/02-testing-tfmm.md"
+  data-apage-dname="_doc_"
+  data-apage-order="2"
+  data-apage-front='[]'
+  data-apage-title="Testing Tfmm">
+  <h1>Testing Tfmm</h1>
+  <p>Test with <a href="http://goo.gl/UYupZI">npm run-scripts</a> on the command line: </p>
+  <pre><code class="lang-bash">npm test
+  </code></pre>
+  <p>Test on the client:<br>Open <a href="test/run-test.html">test/run-test.html</a> in 
+  a web browser</p>
+  
+  </article><!-- / #apage_doc_testing-tfmm -->
+
+
+  <article id="apage_doc_installing-build-tools"
+        class="apage"
+  data-apage-opath="/doc/03-installing-build-tools.md"
+  data-apage-dname="_doc_"
+  data-apage-order="3"
+  data-apage-front='[]'
+  data-apage-title="Installing Build Tools">
+  <h1>Installing Build Tools</h1>
+  <p>The following modules are listed in the <code>&quot;devDependencies&quot;</code> field of 
+  ‘package.json’, so running <code>npm install</code> will install them in the local 
+  ‘node_modules’ directory. However, you may find it useful to install them 
+  globally on your machine, in which case the <code>-g</code> flag is your friend: </p>
+  <p>Install <a href="http://coffeescript.org/">coffee</a> 1.9.2 on the command line: </p>
+  <pre><code class="lang-bash">npm install -g coffee-script
+  </code></pre>
+  <p>Install <a href="http://nodemon.io/">nodemon</a> 1.3.7: </p>
+  <pre><code class="lang-bash">npm install -g nodemon
+  </code></pre>
+  
+  </article><!-- / #apage_doc_installing-build-tools -->
+
+
+  <article id="apage_doc_the-build-process"
+        class="apage"
+  data-apage-opath="/doc/04-the-build-process.md"
+  data-apage-dname="_doc_"
+  data-apage-order="4"
+  data-apage-front='[]'
+  data-apage-title="The Build Process">
+  <h1>The Build Process</h1>
+  <h4>Build Tfmm on the command line</h4>
+  <pre><code class="lang-bash">npm run build
+  </code></pre>
+  <p>@todo discussion of the limitations of file-watching.</p>
+  
+  </article><!-- / #apage_doc_the-build-process -->
+
+
+  <article id="apage_doc_handy-scripts"
+        class="apage"
+  data-apage-opath="/doc/05-handy-scripts.md"
+  data-apage-dname="_doc_"
+  data-apage-order="5"
+  data-apage-front='[]'
+  data-apage-title="Handy Scripts">
+  <h1>Handy Scripts</h1>
+  <h4><code>v:list</code></h4>
+  <p>Shows a list of files which contain the <code>version</code> string from ‘package.json’. 
+  Each filename is suffixed by a colon, followed by the line-number where the 
+  version string appears, eg <code>README.md:1 package.json:4</code>. </p>
+  <pre><code class="lang-bash">npm run v:list
+  </code></pre>
+  <p>Which runs: </p>
+  <pre><code class="lang-bash">grep -ron $npm_package_version {bin,src,*.json} | awk 1 ORS=&#39; &#39; | sed &quot;s@:$npm_package_version@@g&quot;
+  </code></pre>
+  <p>Or verbosely: </p>
+  <pre><code class="lang-bash">grep --recursive --only-matching --line-number $npm_package_version \\
+  {bin,src,*.json} \\
+  | \\
+  awk 1 ORS=&#39; &#39; \\
+  | \\
+  sed &quot;s@:$npm_package_version@@g&quot;
+  </code></pre>
+  <p>Which means: </p>
+  <ol>
+  <li>Use <code>grep</code> to get a newline-delimited list of files which contain the 
+  <code>version</code> string from ‘package.json’<ul>
+  <li><code>--recursive</code> search in subdirectories</li>
+  <li><code>--only-matching</code> don’t show leading/trailing context in the results</li>
+  <li><code>--line-number</code> included after a colon, eg <code>bower.json:3</code></li>
+  </ul>
+  </li>
+  <li>Search in bin/, src/, package.json, bower.json, etc</li>
+  <li>Pipe the list to <code>awk</code></li>
+  <li><a href="http://goo.gl/1WNas5">Convert all newlines to spaces</a></li>
+  <li>Pipe the list to <code>sed</code></li>
+  <li>Delete the trailing colon and version from each filename, eg <code>:1.2.3-4</code></li>
+  </ol>
+  <h4><code>v:open</code></h4>
+  <p>Opens a list of files which contain the <code>version</code> string from ‘package.json’ in 
+  Sublime Text. You will need Sublime Text installed, and a symlink to its <code>subl</code> 
+  binary <a href="http://goo.gl/wJqkjY">added to your PATH</a>. </p>
+  <pre><code class="lang-bash">npm run v:open
+  </code></pre>
+  <p>Which runs: </p>
+  <pre><code class="lang-bash">subl $(npm run v:list --loglevel silent)
+  </code></pre>
+  <p>Note <code>--loglevel silent</code>, which prevents <code>subl</code> from being sent the results-log 
+  which <code>npm run</code> usually outputs.</p>
+  
+  </article><!-- / #apage_doc_handy-scripts -->
+
+
+  <article id="apage_readme"
+        class="apage"
+  data-apage-opath="/README.md"
+  data-apage-dname="_"
+  data-apage-order="readme"
+  data-apage-front='[]'
+  data-apage-title="Tfmm">
+  <h1>Tfmm</h1>
+  <h4>Touchy Feely Music Makey</h4>
+  <ul>
+  <li><a href="">Homepage</a></li>
+  <li><a href="#/doc/documentation">Documentation</a></li>
+  <li><a href="test/run-test.html">Test</a></li>
+  <li><a href="https://github.com/loopdotcoop/tfmm">Fork Tfmm on GitHub</a></li>
+  </ul>
+  
+  </article><!-- / #apage_readme -->
+
+
+  <!-- Apage was configured with no plugins, so nothing is injected here -->
+
+</body>
+</html>
