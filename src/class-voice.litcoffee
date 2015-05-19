@@ -9,48 +9,43 @@ Voice Class
 Begin defining the `Voice` class
 --------------------------------
 
-    class Voice #@todo extend Abasis
+    class Voice
 
+#### `I`, `ID` and `toString()`
 
-
-
-Define public constants
------------------------
-
-By convention, identifiers for constants are all capital letters. 
-
-#### `I` and `ID`
-
-      I:  'Voice'
-      ID: -> ªuid @I.toLowerCase()
-
-
-
-
+      I: 'Voice'
       toString: -> "[object #{@I}]"
 
 
+#### `receptive` and `size`
 
+      receptive: false
+      size: 8
+
+
+
+
+#### `constructor()`
+Xx. 
 
       constructor: (config={}) ->
 
-Record a handy reference to the color, and the main canvas context. 
+Create a `<CANVAS>` element to display the voice’s icon. 
 
-        @color = config.color
-        @_mCtx = config.ctx
+        @$canvas = document.createElement 'canvas'
+        @$canvas.setAttribute 'width' , @size + 'px'
+        @$canvas.setAttribute 'height', @size + 'px'
+        @$canvas.setAttribute 'class', 'icon'
+        config.$player.appendChild @$canvas
 
-Xx. 
+Record a reference to the main canvas context and the icon canvas context. 
 
-        $_button = document.createElement 'canvas'
-        $_button.setAttribute 'width' , '64px'
-        $_button.setAttribute 'height', '64px'
-        $_button.setAttribute 'class', 'button'
-        @_bCtx = $_button.getContext '2d'
-        config.$player.appendChild $_button
+        @main = config.main
+        @icon = @$canvas.getContext '2d'
 
-Set the button color. 
+Set the icon color, and record a handy reference to it. 
 
-        @_bCtx.fillStyle = config.color
+        @icon.fillStyle = @color = config.color
 
 
 
@@ -58,21 +53,50 @@ Set the button color.
 Define public methods
 ---------------------
 
+#### `activate()` and `deactivate()`
+Xx. 
+
+      activate: ->
+        @size = 64
+        @$canvas.setAttribute 'width' , @size + 'px'
+        @$canvas.setAttribute 'height', @size + 'px'
+        @icon.fillStyle = @color #@todo investigate why color is black without this line
+
+      deactivate: ->
+        @size = 8
+        @$canvas.setAttribute 'width' , @size + 'px'
+        @$canvas.setAttribute 'height', @size + 'px'
+        @icon.fillStyle = @color #@todo investigate why color is black without this line
+
+
 #### `render()`
 Xx. 
 
-      render: (secfrac) ->
+      render: (frame, mainSize) ->
 
-Render the button. 
+Alter the icon when receptive. 
 
-        @_bCtx.clearRect 0, 0, 64, 64
-        @_bCtx.fillRect 0, 0, secfrac, secfrac
+        scaleMultiplier = if @receptive then 1 else 0.5
+
+Render the icon. 
+
+        @icon.clearRect 0, 0, @size, @size
+        @drawSquare @icon, frame.secFrac * scaleMultiplier, @size
 
 Render the main animation. 
 
-        @_mCtx.fillStyle = @color
-        @_mCtx.fillRect 50, 50, secfrac, secfrac
+        @main.fillStyle = @color
+        @drawSquare @main, frame.secFrac * scaleMultiplier, mainSize
 
+
+#### `drawSquare()`
+Draws a square at the center of the given `ctx`, where `scale` is the fraction 
+from 0 to 1 of the fiven canvas `size`. 
+
+      drawSquare: (ctx, scale, size) ->
+        scale = size * scale # convert `scale` from fraction to actual pixels
+        pos = (size - scale) / 2
+        ctx.fillRect pos, pos, scale, scale
 
 
 

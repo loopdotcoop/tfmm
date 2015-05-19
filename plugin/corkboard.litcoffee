@@ -121,14 +121,14 @@ Inject CSS
     article[data-apage-dname="_play_"].active p {
       font-size: 40px;
     }
-    article[data-apage-dname="_play_"] canvas.button {
+    article[data-apage-dname="_play_"] canvas.icon {
       display: inline-block;
       margin:  -1em .1em 0 .1em;
       width:  .5em;
       height: .5em;
       transition: all .5s;
     }
-    article[data-apage-dname="_play_"].active canvas.button {
+    article[data-apage-dname="_play_"].active canvas.icon {
       margin:  -10em 1em 0 1em;
       width:   5em;
       height:  5em;
@@ -261,6 +261,12 @@ will then hide all articles except the current one.
         art.$ref.className = art.$ref.className.replace /\s*active|\s*$/g, '' #@todo better regexp
       current.$ref.className += ' active'
 
+Deactivate the previously active Tfmm, and activate the newly active Tfmm. 
+
+      for tfmm in tfmms
+        tfmm.deactivate()
+      current.tfmm?.activate()
+
 Update the document title, which is usually visible at the very top of the 
 browser window, and is also used in the browser’s ‘History’ menu. 
 
@@ -274,17 +280,33 @@ Render Loop
 
 Xx. 
 
-    #start = null
-    #firstStep = (stamp) ->
-      #start = stamp
-      #window.requestAnimationFrame step
+    prevFlip2000 = 0
 
     step = (stamp) ->
-      #progress = stamp - start
+
+Decide whether this is a `flip2000` frame, which occurs every two seconds. 
+
+      currFlip2000 = stamp % 2000
+      flip2000 = currFlip2000 < prevFlip2000
+      prevFlip2000 = currFlip2000
+
+Generate `frame`, which gives renderers useful info about the current frame. 
+
+      frame =
+        stamp:    stamp
+        flip2000: flip2000
+        secFrac:  (stamp % 8000) / 8000 # float from 0 to 1, lasting eight seconds
+
+Call each Tfmm’s renderer. These will call each of their Voice’s renderer. 
+
       for tfmm in tfmms
-        do (tfmm) -> tfmm.render (stamp % 10000) / 100
-      #document.title = progress
+        do (tfmm) -> tfmm.render frame
+
+Recursively call `step()`, the next time the display refreshes. 
+
       window.requestAnimationFrame step
+
+Begin the animation. 
 
     window.requestAnimationFrame step
 
