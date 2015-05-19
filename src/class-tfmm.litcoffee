@@ -34,36 +34,34 @@ By convention, identifiers for constants are all capital letters.
 
       constructor: (config={}) ->
 
-Make constants constant. 
-`ªredefine()` uses [`Object.defineProperty()`](https://goo.gl/OIFpuH). 
+Validate and record constants relating to shape and color. 
 
-        for key, value of @
-          do (key, value) =>
-            if '_' == key.substr 0, 1
-              ª key
-              ªredefine @, key, value, 'private' #@todo move to `_bars`
-            else if /^[_A-Z]+$/.test key
-              if ªF == typeof value then value = @[key]()
-              ªredefine @, key, value, 'constant'
+        @POINTS = config.front.points.split /\s+/
+        @COLORS = config.front.colors.split /\s+/
+        if 5 < @COLORS.length then throw new Error "
+          '#{config.$player.id}' frontmatter contains #{@COLORS.length} colors"
 
-Make `toString()` and `valueOf()` enumerable and immutable. 
+Run special HTML-only initialization if `$player` is provided. @todo validate `$player`
 
-        ªredefine @, 'toString', @toString, 'constant'
-        ªredefine @, 'valueOf',  @valueOf,  'constant'
+        if config.$player
 
-Prevent arbitrary members being added to this instance, or any changes being 
-made. See [MDN’s `freeze()` article](https://goo.gl/AJvLYh) for details. 
+Create a canvas, if `$player` is provided, and get its 2D context. 
 
-        Object.freeze @
+          @_canvas = document.createElement 'canvas'
+          @_canvas.setAttribute 'width' , '256px'
+          @_canvas.setAttribute 'height', '256px'
+          @_canvas.setAttribute 'class', 'main'
+          @_ctx = @_canvas.getContext '2d'
+          config.$player.appendChild @_canvas
 
+Create the voices. 
 
-
-
-Define private properties
--------------------------
-
-By convention, private properties are prefixed with an underscore. Developers 
-should avoid getting or setting these directly. 
+          @_voices = []
+          for color in @COLORS
+            @_voices.push new Voice
+              $player: config.$player
+              color:   color
+              ctx:     @_ctx
 
 
 
@@ -71,20 +69,14 @@ should avoid getting or setting these directly.
 Define public methods
 ---------------------
 
-#### `clone()`
-Returns a copy of the instance. This can be useful in situations where a direct 
-reference to the instance should not be passed to another part of the program. 
+#### `render()`
+Xx. 
 
-      #clone: ->
-      #  ªclone @, ['id']
-
-
-
-
-#### `destructor()`
-Cleans up all resources related to this instance, ready for garbage-collection. 
-
-      #destructor: -> #@todo
+      render: (secfrac) ->
+        @_ctx.clearRect 0, 0, 256, 256
+        @_ctx.fillStyle = "rgb(0,100,0)"
+        @_ctx.fillRect 0, 0, secfrac, secfrac
+        voice.render secfrac for voice in @_voices
 
 
 

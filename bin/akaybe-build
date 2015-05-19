@@ -23,6 +23,7 @@
       , doPlugin = false
       , flag = false
       , npms = []
+      , watch = []
       , arg
       , builder
       , ndArgs
@@ -65,6 +66,18 @@
           , '-v --version  Show the ' + I + ' version.'
           , "-p --plugin   Build each file in the 'plugin/' directory."
           , "-n --npm      Run an npm task."
+          , "-w --watch    Provide additional watch directories."
+          , ''
+          , ''
+          , 'Default watch directories'
+          , '-------------------------'
+          , ''
+          , 'By default, ' + I + ' will watch for changes to:'
+          , '/src          Concatenated and compiled to /build'
+          , '/test         Concatenated with /src and compiled to /build/test'
+          , ''
+          , 'And if the --plugin or -p flag is set:'
+          , '/plugin       Compiled individually to /build/plugin'
           , ''
           , ''
         ]
@@ -183,9 +196,13 @@
             case '-v':
             case '--version':
                 return exit(0, V);
+            case '--watch':
+                flag = 'watch';
+                break;
             default:
                 if (2 === arg.length && '-' === arg[0]) { flag = 'unknown'; }
-                else if ('npm' == flag) { npms.push(arg);  } // an npm path
+                else if ('npm'   == flag) { npms.push(arg); } // an npm path
+                else if ('watch' == flag) { watch = watch.concat(['-w',arg]); }
         }
     }
 
@@ -283,6 +300,7 @@
 
 
     //// Prepare arguments to send to `nodemon`. 
+    ndArgs = []
     ndArgs = [
         '-w','src'  // --watch  watch the ‘src/’ directory for changes
       , '-w','test' // --watch  watch the ‘test/’ directory for changes
@@ -292,10 +310,14 @@
             '-w','plugin' // --watch  watch the ‘plugin/’ directory for changes
         ]);
     }
+    if (watch.length) {
+      ndArgs = ndArgs.concat(watch);
+    }
     ndArgs = ndArgs.concat([
         '-e'        // --ext    comma-delimited extensions to watch:
       , 'litcoffee' //            literate CoffeeScript files
         + ',coffee' //            standard CoffeeScript files
+        + ',md'     //            markdown files
       , '-x'        // --exec   execute the following script
       , builder
     ]);

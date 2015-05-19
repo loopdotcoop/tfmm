@@ -18,6 +18,16 @@ Inject CSS
     body {
       overflow: hidden;
       text-align: center;
+      background: #111;
+      color: #ccc;
+    }
+    a {
+      color: #ccc;
+      text-decoration: none;
+      transition: all .5s;
+    }
+    a:hover {
+      color: #f2f;
     }
     article {
       display: none;
@@ -37,7 +47,7 @@ Inject CSS
     #apage_readme li a {
       position: absolute;
       z-index: 99;
-      border: 4px solid blue; 
+      padding: .5em;
     }
     #apage_readme h4 a {
       top:    0;
@@ -88,10 +98,40 @@ Inject CSS
       width: 40em;
       height: 40em;
     }
-    article[data-apage-dname="_play_"] canvas {
-      background-color: #ccc;
+    article[data-apage-dname="_play_"] canvas.main {
       width: 100%;
       height: 100%;
+    }
+    article[data-apage-dname="_play_"] h1,
+    article[data-apage-dname="_play_"] p {
+      position: absolute;
+      transition: all .5s;
+    }
+    article[data-apage-dname="_play_"] h1 {
+      margin-top: 0;
+      font-size: 8px;
+    }
+    article[data-apage-dname="_play_"] p {
+      margin-top: 2em;
+      font-size: 4px;
+    }
+    article[data-apage-dname="_play_"].active h1 {
+      font-size: 80px;
+    }
+    article[data-apage-dname="_play_"].active p {
+      font-size: 40px;
+    }
+    article[data-apage-dname="_play_"] canvas.button {
+      display: inline-block;
+      margin:  -1em .1em 0 .1em;
+      width:  .5em;
+      height: .5em;
+      transition: all .5s;
+    }
+    article[data-apage-dname="_play_"].active canvas.button {
+      margin:  -10em 1em 0 1em;
+      width:   5em;
+      height:  5em;
     }
     """
 
@@ -107,7 +147,7 @@ Create a ‘Not Found’ article, which works like a ‘404 Not Found’ page.
     $ref.setAttribute 'id'   , 'apage_undefined'
     $ref.innerHTML = """
     <!-- injected by Apage’s Pagination plugin -->
-    <h1>Article Not Found</h1>
+    <h1>Not Found!</h1>
     """
     d.body.appendChild $ref
 
@@ -140,14 +180,30 @@ Add a route to the 0th article which catches '/', eg 'http://example.com/#/'.
 
 
 
-Replace static ‘Play’ articles with dynamic `<CANVAS>` elements
----------------------------------------------------------------
+Init the ‘play’ articles
+------------------------
 
-Xx. 
+Prepare a container for `Tfmm` instances. 
 
-    for $player in $$('article[data-apage-dname="_play_"]')
+    tfmms = []
+
+Step through each ‘play’ article on the page. 
+
+    for $player in $$ 'article[data-apage-dname="_play_"]'
       do ($player) ->
-        $player.innerHTML = '<canvas></canvas>'
+
+Get the `colors` and `points` fields from each ‘play’ article’s frontmatter. 
+
+        front = {}
+        ((k,v) -> front[k] = v)(k,v) for [k,v] in arts[$player.id].front
+
+Instantiate a `Tfmm` instance for each ‘play’ article. The instance is recorded 
+in the `tfmms` array (used by `step()`, below), and also in the `arts` object 
+(used by the click handler, below). 
+
+        tfmms.push arts[$player.id].tfmm = new window.Tfmm
+          $player: $player
+          front:   front
 
 
 
@@ -155,19 +211,20 @@ Xx.
 Add Click Handlers
 ------------------
 
-Xx. 
+Click on the page background to return to the splash page. 
 
     window.addEventListener 'click', -> window.location.hash = '/'
 
-Xx. 
+Click on a ‘play’ article to make it the current location (if not already), or 
+send the click message to its `Tfmm` instance. 
 
-    for $player in $$('article[data-apage-dname="_play_"]')
+    for $player in $$ 'article[data-apage-dname="_play_"]'
       do ($player) ->
         $player.addEventListener 'click', (event) ->
           if -1 == @.className.indexOf 'active'
             window.location.hash = @.id.substr(5).replace /_/g, '/'
           else
-            console.log arts[@.id].front#'click active ', @
+            console.log arts[@.id].tfmm #@todo 
           event.stopPropagation()
 
 
@@ -211,6 +268,25 @@ browser window, and is also used in the browser’s ‘History’ menu.
 
 
 
+
+Render Loop
+-----------
+
+Xx. 
+
+    #start = null
+    #firstStep = (stamp) ->
+      #start = stamp
+      #window.requestAnimationFrame step
+
+    step = (stamp) ->
+      #progress = stamp - start
+      for tfmm in tfmms
+        do (tfmm) -> tfmm.render (stamp % 10000) / 100
+      #document.title = progress
+      window.requestAnimationFrame step
+
+    window.requestAnimationFrame step
 
 
 
