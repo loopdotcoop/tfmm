@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-/*! akaybe-build 0.0.3 //// MIT Licence //// http://akaybe.richplastow.com/ */
+/*! akaybe-build 0.0.5 //// MIT Licence //// http://akaybe.richplastow.com/ */
 
 !function (root) { 'use strict';
 
 
     //// Define constants.
     var I     = 'akaybe-build'
-      , V     = '0.0.3'
+      , V     = '0.0.5'
 
 
     //// Load Node modules.
@@ -21,6 +21,8 @@
       , pkg   = {}
       , argv  = process.argv.slice()
       , doPlugin = false
+      , flag = false
+      , npms = []
       , arg
       , builder
       , ndArgs
@@ -28,6 +30,8 @@
       , stdout
       , stderr
       , e
+      , i
+      , l
 
 
     //// Define regexps.
@@ -46,8 +50,8 @@
           , 'Injects Akaybe constants and functions during compilation.'
           , ''
           , ''
-          , 'Basc Usage'
-          , '----------'
+          , 'Basic Usage'
+          , '-----------'
           , ''
           , I + ' -h'
           , I + ' --version'
@@ -60,6 +64,7 @@
           , '-h --help     Show this help.'
           , '-v --version  Show the ' + I + ' version.'
           , "-p --plugin   Build each file in the 'plugin/' directory."
+          , "-n --npm      Run an npm task."
           , ''
           , ''
         ]
@@ -167,6 +172,10 @@
             case '-h':
             case '--help':
                 return exit( 0, help.join('\n') );
+            case '-n':
+            case '--npm':
+                flag = 'npm';
+                break;
             case '-p':
             case '--plugin':
                 doPlugin = true;
@@ -175,6 +184,8 @@
             case '--version':
                 return exit(0, V);
             default:
+                if (2 === arg.length && '-' === arg[0]) { flag = 'unknown'; }
+                else if ('npm' == flag) { npms.push(arg);  } // an npm path
         }
     }
 
@@ -257,6 +268,16 @@
 
           + '; fi; '  // end the `if` block
           + 'done'    // end the `do` block
+        ;          
+    }
+
+
+    //// Add any `npm run` tasks to the builder.
+    for (i=0, l=npms.length; i<l; i++) {
+        builder
+          +='; '      // separate the previous build from the npm-build
+          + 'npm run '
+          + npms[i]
         ;          
     }
 
