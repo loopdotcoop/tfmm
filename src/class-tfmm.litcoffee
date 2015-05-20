@@ -10,11 +10,8 @@ Begin defining the `Tfmm` class
 -------------------------------
 
     class Tfmm
-
-#### `I` and `toString()`
-
-      I:  ªI
-      toString: -> "[object #{@I}]"
+      C: 'Tfmm'
+      toString: -> "[object #{@C}]"
 
 
 #### `receptive` and `size`
@@ -96,13 +93,17 @@ Clear all previously rendered pixels in the main canvas.
 
         @main.clearRect 0, 0, @size, @size
 
-Every two seconds, flip which voice is receptive. 
+Every two seconds, flip which Voice is receptive. 
 
         if frame.flip2000
           voice.receptive = false for voice in @voices
           if @voices.length <= ++@receptive then @receptive = 0
-          if ! @voices[@receptive] then console.log @ID, @receptive
           @voices[@receptive].receptive = true
+
+Every two seconds, quieten each Voice. 
+
+        if frame.flip8000
+          voice.timeline.quieten 0.5, 0.1 for voice in @voices
 
 Let each voice draw on the main canvas, and also update its icon.
 
@@ -111,8 +112,18 @@ Let each voice draw on the main canvas, and also update its icon.
 Clear the outer-parts of the main canvas, to reveal the image. @todo
 
         @main.fillStyle = "rgba(0,100,0,.5)"
-        @main.fillRect 0, 0, frame.secFrac * @size, frame.secFrac * @size
+        @main.fillRect 0, 0, frame.frac8000 * @size, frame.frac8000 * @size
 
+
+
+
+#### `trigger()`
+- `velocity <float>`  The power of the trigger, from 0 to 1
+
+Trigger the Voice which currently has focus. 
+
+      trigger: (velocity) ->
+        @voices[@receptive].timeline.add velocity
 
 
 

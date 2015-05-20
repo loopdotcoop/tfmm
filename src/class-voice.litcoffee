@@ -10,27 +10,32 @@ Begin defining the `Voice` class
 --------------------------------
 
     class Voice
-
-#### `I`, `ID` and `toString()`
-
-      I: 'Voice'
-      toString: -> "[object #{@I}]"
-
-
-#### `receptive` and `size`
-
-      receptive: false
-      size: 8
-
-
-
-
-#### `constructor()`
-Xx. 
+      C: 'Voice'
+      toString: -> "[object #{@C}]"
 
       constructor: (config={}) ->
 
-Create a `<CANVAS>` element to display the voice’s icon. 
+
+#### `timeline <Timeline>`
+Whether the Voice is currently receptive to keyboard or microphone input. 
+
+        @timeline = new Timeline
+
+
+#### `receptive <boolean>`
+Whether this Voice is currently receptive to keyboard or microphone input. @todo rename `hasFocus`
+
+        @receptive = false
+
+
+#### `size <integer>`
+The current width and height for the `@$canvas` (which is always square). 
+
+        @size = 8
+
+
+#### `$canvas <HTMLCanvasElement>`
+A `<CANVAS>` element to draw an icon on, and receive click/touch events. 
 
         @$canvas = document.createElement 'canvas'
         @$canvas.setAttribute 'width' , @size + 'px'
@@ -38,14 +43,23 @@ Create a `<CANVAS>` element to display the voice’s icon.
         @$canvas.setAttribute 'class', 'icon'
         config.$player.appendChild @$canvas
 
-Record a reference to the main canvas context and the icon canvas context. 
 
-        @main = config.main
+#### `icon <HTMLCanvasElement>`
+A reference to this Voice’s `<CANVAS>` context. 
+
         @icon = @$canvas.getContext '2d'
 
-Set the icon color, and record a handy reference to it. 
 
-        @icon.fillStyle = @color = config.color
+#### `main <HTMLCanvasElement>`
+A reference to the VoiceSet’s `<CANVAS>` context. 
+
+        @main = config.main
+
+
+#### `color <string>`
+The icon fill-color for this Voice. Note that we set the icon color here. 
+
+        @color = @icon.fillStyle = config.color
 
 
 
@@ -81,24 +95,21 @@ Alter the icon when receptive.
 Render the icon. 
 
         @icon.clearRect 0, 0, @size, @size
-        @drawSquare @icon, frame.secFrac * scaleMultiplier, @size
+        @drawSquare @icon, frame.frac8000 * scaleMultiplier, @size
 
 Render the main animation. 
 
         @main.fillStyle = @color
-        @drawSquare @main, frame.secFrac * scaleMultiplier, mainSize
+        @timeline.render frame, @main, mainSize
 
 
 #### `drawSquare()`
 Draws a square at the center of the given `ctx`, where `scale` is the fraction 
-from 0 to 1 of the fiven canvas `size`. 
+from 0 to 1 of the given canvas `size`. 
 
       drawSquare: (ctx, scale, size) ->
         scale = size * scale # convert `scale` from fraction to actual pixels
         pos = (size - scale) / 2
         ctx.fillRect pos, pos, scale, scale
-
-
-
 
 

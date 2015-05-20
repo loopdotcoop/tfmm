@@ -208,6 +208,18 @@ in the `tfmms` array (used by `step()`, below), and also in the `arts` object
 
 
 
+Add Keyboard Handlers
+---------------------
+
+Press `[q]` to trigger the voice which currently has focus. @todo other keys
+
+    window.addEventListener 'keydown', (event) ->
+      if 81 == event.keyCode
+        currentTfmm?.trigger 1 # velocity
+
+
+
+
 Add Click Handlers
 ------------------
 
@@ -249,6 +261,9 @@ Add the `Pagination` plugin’s resolver function to Apage’s list of resolvers
 Updater
 -------
 
+    currentTfmm = null
+
+
 Add the `Pagination` plugin’s updater function to Apage’s list of updaters. 
 
     updaters.push (current) ->
@@ -261,11 +276,17 @@ will then hide all articles except the current one.
         art.$ref.className = art.$ref.className.replace /\s*active|\s*$/g, '' #@todo better regexp
       current.$ref.className += ' active'
 
-Deactivate the previously active Tfmm, and activate the newly active Tfmm. 
+Deactivate the previously active Tfmm (in fact, all Tfmms). 
 
+      currentTfmm = null
       for tfmm in tfmms
         tfmm.deactivate()
-      current.tfmm?.activate()
+
+Activate the newly active Tfmm. 
+
+      if current.tfmm
+        currentTfmm = current.tfmm
+        currentTfmm.activate()
 
 Update the document title, which is usually visible at the very top of the 
 browser window, and is also used in the browser’s ‘History’ menu. 
@@ -278,16 +299,26 @@ browser window, and is also used in the browser’s ‘History’ menu.
 Render Loop
 -----------
 
-Xx. 
+Guarantee `currFlip2000 = true` and `currFlip8000 = true` on the first frame. 
 
-    prevFlip2000 = 0
+    prevFlip2000 = -1
 
     step = (stamp) ->
 
 Decide whether this is a `flip2000` frame, which occurs every two seconds. 
 
       currFlip2000 = stamp % 2000
-      flip2000 = currFlip2000 < prevFlip2000
+      if currFlip2000 >= prevFlip2000
+        flip2000 = false
+      else
+        flip2000 = true
+
+Decide whether this is a `flip8000` frame, which occurs every eight seconds. 
+
+        if currFlip2000 == stamp % 8000
+          flip8000 = true
+        else
+          flip8000 = false
       prevFlip2000 = currFlip2000
 
 Generate `frame`, which gives renderers useful info about the current frame. 
@@ -295,7 +326,9 @@ Generate `frame`, which gives renderers useful info about the current frame.
       frame =
         stamp:    stamp
         flip2000: flip2000
-        secFrac:  (stamp % 8000) / 8000 # float from 0 to 1, lasting eight seconds
+        flip8000: flip8000
+        frac2000: (stamp % 2000) / 2000 # float from 0 to 1, lasting two seconds
+        frac8000: (stamp % 8000) / 8000 # float from 0 to 1, lasting eight seconds
 
 Call each Tfmm’s renderer. These will call each of their Voice’s renderer. 
 
