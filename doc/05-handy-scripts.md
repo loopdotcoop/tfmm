@@ -1,6 +1,32 @@
 Handy Scripts
 =============
 
+#### `hi`
+Opens up four useful project windows, saving you a few precious seconds at the 
+start of a development session. You will need Sublime Text installed, and a 
+symlink to its `subl` binary [added to your PATH](http://goo.gl/wJqkjY).  
+@todo cross-platform, eg `xdg-open` (*nix) and `start` (win)
+
+```bash
+npm run hi
+```
+
+Which runs: 
+
+```bash
+open .; open index.html; open test/run-test.html; subl .
+```
+
+Which means: 
+
+1.  Open the present working directory. On OS X, this opens a Finder window
+2.  Open the project’s local homepage using the default browser
+3.  Open the client-side test page using the default browser
+4.  Open the project in Sublime Text
+
+
+
+
 #### `v:list`
 Shows a list of files which contain the `version` string from ‘package.json’. 
 Each filename is suffixed by a colon, followed by the line-number where the 

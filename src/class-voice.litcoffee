@@ -17,19 +17,19 @@ Begin defining the `Voice` class
 
 
 #### `timeline <Timeline>`
-Whether the Voice is currently receptive to keyboard or microphone input. 
+Every voice has a single Timeline, which holds the current Flourishes. 
 
         @timeline = new Timeline
 
 
-#### `receptive <boolean>`
-Whether this Voice is currently receptive to keyboard or microphone input. @todo rename `hasFocus`
+#### `hasFocus <boolean>`
+Whether this Voice is currently receptive to keyboard or microphone input. 
 
-        @receptive = false
+        @hasFocus = false
 
 
 #### `size <integer>`
-The current width and height for the `@$canvas` (which is always square). 
+The current width and height for the icon `@$canvas` (which is always square). 
 
         @size = 8
 
@@ -41,25 +41,35 @@ A `<CANVAS>` element to draw an icon on, and receive click/touch events.
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
         @$canvas.setAttribute 'class', 'icon'
-        config.$player.appendChild @$canvas
+        config.$voiceSet.appendChild @$canvas
 
 
-#### `icon <HTMLCanvasElement>`
-A reference to this Voice’s `<CANVAS>` context. 
+#### `icon <CanvasRenderingContext2D>`
+A reference to the drawing-context of the icon `<CANVAS>`. 
 
         @icon = @$canvas.getContext '2d'
 
 
-#### `main <HTMLCanvasElement>`
-A reference to the VoiceSet’s `<CANVAS>` context. 
+#### `visualizer <CanvasRenderingContext2D>`
+A reference to the drawing-context of the VoiceSet’s visualizer `<CANVAS>`. 
 
-        @main = config.main
+        @visualizer = config.visualizer
 
 
 #### `color <string>`
 The icon fill-color for this Voice. Note that we set the icon color here. 
 
         @color = @icon.fillStyle = config.color
+
+
+#### `sample <string>`
+The filename for the audio file for this Voice, relative to /asset/audio. 
+
+        @sample = config.sample
+        #@$audio = document.createElement 'audio'
+        #@$audio.setAttribute 'src', "./asset/audio/#{@sample}"
+        #@$audio.setAttribute 'autoplay', "true"
+        #config.$voiceSet.appendChild @$audio
 
 
 
@@ -86,30 +96,36 @@ Xx.
 #### `render()`
 Xx. 
 
-      render: (frame, mainSize) ->
+      render: (frame, visualizerSize) ->
 
-Alter the icon when receptive. 
+Alter the icon when this Voice has focus. 
 
-        scaleMultiplier = if @receptive then 1 else 0.5
+        scaleMultiplier = if @hasFocus then 1 else 0.5
 
-Render the icon. 
+Render the current icon frame. 
 
         @icon.clearRect 0, 0, @size, @size
         @drawSquare @icon, frame.frac8000 * scaleMultiplier, @size
 
-Render the main animation. 
+Add to the current frame of the visualizer animation. 
 
-        @main.fillStyle = @color
-        @timeline.render frame, @main, mainSize
+        @visualizer.fillStyle = @color
+        @timeline.render frame, @visualizer, visualizerSize
+
+
 
 
 #### `drawSquare()`
-Draws a square at the center of the given `ctx`, where `scale` is the fraction 
-from 0 to 1 of the given canvas `size`. 
+- `context <CanvasRenderingContext2D>`  The canvas context to draw on
+- `scale <float>`                       Fraction of the canvas the square fills
+- `size <integer>`                      Pixel width and height of the canvas
+Draws a square at the center of the given `context`, where `scale` is the 
+fraction from 0 to 1 of the given canvas `size`. 
 
-      drawSquare: (ctx, scale, size) ->
+      drawSquare: (context, scale, size) ->
         scale = size * scale # convert `scale` from fraction to actual pixels
         pos = (size - scale) / 2
-        ctx.fillRect pos, pos, scale, scale
+        context.fillRect pos, pos, scale, scale
+
 
 

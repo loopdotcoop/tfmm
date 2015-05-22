@@ -13,6 +13,6 @@ Typical instantiation of the `Tfmm` class
 
       "The class is a function"
       ªF
-      -> Tfmm
+      -> Main
 
     ]

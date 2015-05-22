@@ -436,7 +436,7 @@ Expose `todor`’s `do()` function as a module method, so that any consumer of
 this module can run its assertions. In Node, for example:  
 `require('foo').runTest();`
 
-    Tfmm.runTest = tudor.do
+    Main.runTest = tudor.do
 
 
 

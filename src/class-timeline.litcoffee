@@ -17,7 +17,7 @@ Begin defining the `Timeline` class
 
 
 #### `flourishes <Array>`
-Various Flourish instances will be added to, and removed from, this Timeline. 
+Records the various Flourish instances which the Timeline currently contains. 
 
         @flourishes = []
 
