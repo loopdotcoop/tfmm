@@ -140,7 +140,7 @@ Every two seconds, flip which Voice has focus.
 Every eight seconds, quieten each Voice. 
 
         if frame.flip8000
-          voice.timeline.quieten 0.5, 0.1 for voice in @voices
+          voice.quieten 0.3, 0.05 for voice in @voices
 
 Allow each voice to update its own icon, and draw on the visualizer canvas. 
 

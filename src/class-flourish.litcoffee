@@ -29,13 +29,13 @@ True if the Flourish has scheduled its audio to be triggered.
 
 
 #### `start <float>`
-The position in the Timeline loop at which this Flourish is triggered, 0 to 1. 
+The position in the loop at which this Flourish is triggered, 0 to 1. 
 
         @start = config.start
 
 
 #### `duration <float>`
-The proportion of the Timeline loop this Flourish takes to complete, 0 to 1. 
+The proportion of the loop this Flourish takes to complete, 0 to 1. 
 
         @duration = config.duration
 
@@ -84,8 +84,8 @@ Xx.
       lookahead: (now, frame) ->
         if @hasScheduled || @start > now + 0.1 then return
         @hasScheduled = true
-        @voice.play frame.stamp + (@start - now) * 2000
-        #ª 'pre-trig', frame.stamp + (@start - now) * 2000
+        @voice.play @velocity, (frame.stamp + (@start - now) * 2000)
+
 
 
 

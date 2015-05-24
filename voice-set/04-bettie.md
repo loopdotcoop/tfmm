@@ -1,7 +1,7 @@
 ---
 points:  5 6  2 3
 colors:  green         orange        gold
-samples: 01-frankie-1  01-frankie-2  01-frankie-3
+samples: 04-bettie-1  04-bettie-2  04-bettie-3
 ---
 
 Bettie

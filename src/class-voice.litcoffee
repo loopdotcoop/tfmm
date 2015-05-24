@@ -16,17 +16,22 @@ Begin defining the `Voice` class
       constructor: (config={}) ->
 
 
+#### `flourishes <Array>`
+Records the various Flourish instances which belong to this Voice. 
+
+        @flourishes = []
+
+
+#### `now <float>`
+The most recent frame, as a fraction of the `frac2000` loop-length. 
+
+        @now = {}
+
+
 #### `maestro <Maestro>`
 @todo describe
 
         @maestro = config.maestro
-
-
-#### `timeline <Timeline>`
-Every voice has a single Timeline, which holds the current Flourishes. 
-
-        @timeline = new Timeline
-          voice: @
 
 
 #### `hasFocus <boolean>`
@@ -75,11 +80,6 @@ An Asset representing the audio file for this Voice.
         @sample = new Asset 
           url: "asset/audio/#{config.sample}.mp3"
 
-        #@$audio = document.createElement 'audio'
-        #@$audio.setAttribute 'src', "./asset/audio/#{@sample}"
-        #@$audio.setAttribute 'autoplay', "true"
-        #config.$voiceSet.appendChild @$audio
-
 
 
 
@@ -105,10 +105,12 @@ Xx.
 
 
 #### `render()`
-- `frame <object>`            The current moment’s frame object
-- `visualizerSize <integer>`  Xx
+- `frame <object>`   The current moment’s frame object
+- `vSize <integer>`  Xx
 
-      render: (frame, visualizerSize) ->
+      render: (frame, vSize) ->
+
+        @now = frame
 
 Alter the icon when this Voice has focus. 
 
@@ -122,7 +124,10 @@ Render the current icon frame.
 Add to the current frame of the visualizer animation. 
 
         @visualizer.fillStyle = @color
-        @timeline.render frame, @visualizer, visualizerSize
+
+Xx. 
+
+        flourish.render frame, @visualizer, vSize for flourish in @flourishes
 
 
 
@@ -145,11 +150,15 @@ fraction from 0 to 1 of the given canvas `size`.
 #### `trigger()`
 - `velocity <float>`  The power of the trigger, from 0 to 1
 
-Add a Flourish to the timeline, and play the sample. 
+Add a Flourish to the `flourishes` list, and play the sample. 
 
       trigger: (velocity) ->
-        @timeline.add velocity
-        @play 0
+        @flourishes.push new Flourish
+          start:    @now.frac2000
+          duration: 0.2
+          velocity: velocity
+          voice:    @
+        @play velocity, 0
 
 
 
@@ -161,9 +170,31 @@ Add a Flourish to the timeline, and play the sample.
 Play the sample. 
 
       play: (velocity, stamp) ->
+
         source = @maestro.audioCtx.createBufferSource()
         source.buffer = @sample.buffer
-        source.connect @maestro.audioCtx.destination
-        source.start stamp
+        gainNode = @maestro.audioCtx.createGain()
+        source.connect gainNode
+        gainNode.connect @maestro.audioCtx.destination
+        gainNode.gain.value = velocity
+        source.start stamp / 1000
+
+
+
+
+#### `quieten()`
+- `multiplier <float>`  0 to 1, applied to every Flourish
+- `threshold <float>`   Below this velocity, a Flourish is removed
+
+Attenuate all Flourishes. Typically called at the end of every loop. 
+
+      quieten: (multiplier, threshold) ->
+        i = @flourishes.length
+        while i--
+          flourish = @flourishes[i]
+          flourish.velocity *= multiplier
+          if threshold >= flourish.velocity
+            @flourishes.splice i, 1
+
 
 
