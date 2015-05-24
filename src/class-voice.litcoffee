@@ -62,10 +62,12 @@ The icon fill-color for this Voice. Note that we set the icon color here.
         @color = @icon.fillStyle = config.color
 
 
-#### `sample <string>`
-The filename for the audio file for this Voice, relative to /asset/audio. 
+#### `sample <Asset>`
+An Asset representing the audio file for this Voice. 
 
-        @sample = config.sample
+        @sample = new Asset 
+          url: "./asset/audio/#{config.sample}"
+
         #@$audio = document.createElement 'audio'
         #@$audio.setAttribute 'src', "./asset/audio/#{@sample}"
         #@$audio.setAttribute 'autoplay', "true"

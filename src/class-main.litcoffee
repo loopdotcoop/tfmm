@@ -1,7 +1,7 @@
-Main Class
-==========
+Main
+====
 
-#### Adds VoiceSets to an Apage Corkboard page
+#### The main app class for the Touchy Feely Music Makey microsite
 
     class Main
       C: ªI
@@ -14,6 +14,7 @@ Main Class
 
 Properties
 ----------
+
 
 #### `active <integer>`
 The active VoiceSet in `@voiceSets`, or `null` if no VoiceSet is active. 
@@ -42,45 +43,33 @@ and `initVoiceSets()` also records a reference to these instances in `arts`.
 
 
 #### `maestro <Maestro>`
-Create an animation controller, and start the animation. 
+Create an animation controller. 
 
         @maestro = new Maestro
           renderers: @voiceSets
-        @maestro.start()
 
 
+#### `$progressWrap <HTMLDivElement>`
+A `<div id="#progress-wrap">` element, to contain `$progressBar`. 
+
+        @$progressWrap = document.createElement 'div'
+        @$progressWrap.setAttribute 'id', 'progress-wrap'
+        document.body.appendChild @$progressWrap
 
 
-Event Listeners
----------------
+#### `$progressBar <HTMLSpanElement>`
+A `<span id="#progress-bar">` element, to show AssetManager progress. 
 
-#### `window:keydown`
-Press `[q]` to trigger the voice which currently has focus. @todo other keys
-
-        window.addEventListener 'keydown', (event) =>
-          if null == @active then return
-          if 81 == event.keyCode
-            @active.trigger 1 # velocity
+        @$progressBar = document.createElement 'span'
+        @$progressBar.setAttribute 'id', 'progress-bar'
+        @$progressWrap.appendChild @$progressBar
 
 
-#### `window:click`
-Click on the page background to return to the splash page. 
+#### `assetManager <AssetManager>`
+Create an AssetManager, and start loading Assets. 
 
-        window.addEventListener 'click', -> window.location.hash = '/'
-
-
-#### `VoiceSet:click`
-Click on a VoiceSet article to make it the current location (if not already), 
-or send the click message to its VoiceSet instance. 
-
-        for $voiceSet in @$$voiceSets
-          do ($voiceSet) ->
-            $voiceSet.addEventListener 'click', (event) ->
-              if -1 == @className.indexOf 'active'
-                window.location.hash = @id.substr(5).replace /_/g, '/' #@todo neater solution
-              else
-                console.log arts[@.id].voiceSet #@todo react to click
-              event.stopPropagation()
+        @assetManager = @initAssetManager()
+        @assetManager.load()
 
 
 
@@ -88,8 +77,8 @@ or send the click message to its VoiceSet instance.
 Methods
 -------
 
+
 #### `initVoiceSets()`
-- `current <object>`  The newly-navigated-to `art` object
 
 Xx. @todo describe
 
@@ -115,6 +104,93 @@ Instantiate a VoiceSet instance for each /voice-set/*.md file.
 
 
 
+#### `initAssetManager()`
+
+Xx. @todo describe
+
+      initAssetManager: ->
+
+Create an AssetManager instance. 
+
+        assetManager = new AssetManager
+          onProgress: @onLoadProgress
+          onComplete: @onLoadComplete
+
+Tell the AssetManager about the Voices’ samples. 
+
+        for voiceSet in @voiceSets
+          for voice in voiceSet.voices
+            assetManager.add voice.sample
+
+Return the AssetManager instance. 
+
+        assetManager
+
+
+
+
+#### `onLoadProgress()`
+- `progress <float>`  A summary of the load progress of all Assets, from 0 to 1
+
+This method is passed to the AssetManager as `config.onProgress`. It’s used 
+to update the progress bar as the Assets load.  
+Note `=>` because `onLoadProgress()` is called from the AssetManager’s context. 
+
+      onLoadProgress: (progress) =>
+        @$progressBar.style.width = "#{progress * 100}%"
+
+
+
+
+#### `onLoadComplete()`
+- `error <string>`  Explains why the load failed, or `undefined` if successful
+
+This method is passed to the AssetManager as `config.onComplete`. It hides the 
+progress bar, and shows and enables the voice-set elements.  
+Note `=>` because `onLoadComplete()` is called from the AssetManager’s context. 
+
+      onLoadComplete: (error) =>
+        if error
+          alert error
+        else
+          document.body.setAttribute 'class', 'complete'
+          @enableUserInput()
+          @maestro.start()
+
+
+
+
+#### `enableUserInput()`
+Xx. @todo describe
+
+      enableUserInput: ->
+
+Press `[q]` to trigger the voice which currently has focus. @todo other keys
+
+        window.addEventListener 'keydown', (event) =>
+          if null == @active then return
+          if 81 == event.keyCode
+            @active.trigger 1 # velocity
+
+Click on the page background to return to the splash page. 
+
+        window.addEventListener 'click', -> window.location.hash = '/'
+
+Click on a VoiceSet article to make it the current location (if not already), 
+or send the click message to its VoiceSet instance. 
+
+        for $voiceSet in @$$voiceSets
+          do ($voiceSet) ->
+            $voiceSet.addEventListener 'click', (event) ->
+              if -1 == @className.indexOf 'active'
+                window.location.hash = @id.substr(5).replace /_/g, '/' #@todo neater solution
+              else
+                console.log arts[@.id].voiceSet #@todo react to click
+              event.stopPropagation()
+
+
+
+
 #### `updater()`
 - `current <object>`  The newly-navigated-to `art` object
 
@@ -133,3 +209,7 @@ Activate the newly active VoiceSet.
         if current.voiceSet
           @active = current.voiceSet
           @active.activate()
+
+
+
+

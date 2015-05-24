@@ -210,7 +210,7 @@ Initialize the output array, as well as `mock` and the page pass/fail tallies.
                 when ªF # a mock-modifier
                   try mock = job mock catch e then error = e.message
                   if error then sec.push @formatMockModifierError job, error
-                when ªA # assertion in the form `[ runner, name, expect, actual ]`
+                when ªA # in the form `[ runner, heading, expect, actual ]`
                   [ runner, heading, expect, actual ] = job # dereference
                   result = runner expect, actual, mock # run the test
                   if ! result
@@ -352,7 +352,7 @@ An assertion-runner which expects `actual()` to throw an exception.
           error = false
           try actual mock catch e then error = e
           if ! error
-            [ 'No exception thrown, expected', expect ]
+            [ 'No exception thrown, expected', { message:expect } ]
           else if expect != error.message
             [ error.message, 'was thrown, but expected', expect ]
 

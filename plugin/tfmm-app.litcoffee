@@ -85,6 +85,7 @@ Inject CSS
       position: relative;
       z-index: 55;
       display: inline-block;
+      opacity: 0; /* becomes `1` when preload is complete */
       vertical-align: top;
       width: 4em;
       height: 4em;
@@ -131,6 +132,36 @@ Inject CSS
       margin:  -10em 1em 0 1em;
       width:   5em;
       height:  5em;
+    }
+
+    body.complete article[data-apage-dname="_voice-set_"] {
+      opacity: 1;
+    }
+    body.complete div#progress-wrap {
+      border-top-width: 0;
+      opacity: 0;
+    }
+    body.complete span#progress-bar {
+      height: 0;
+    }
+
+    div#progress-wrap {
+      position: absolute;
+      z-index: 199;
+      left:   10%;
+      right:  10%;
+      top:    50%;
+      bottom: 50%;
+      text-align: left;
+      border-top: .5em solid #f0f;
+      opacity: 1;
+      transition: all .5s;
+    }
+    span#progress-bar {
+      display: inline-block;
+      background-color: orange;
+      height: .5em;
+      transition: all .5s;
     }
     """
 
