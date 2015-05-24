@@ -16,6 +16,12 @@ Properties
 ----------
 
 
+#### `audioCtx <AudioContext>`
+Xx. @todo describe
+
+        @audioCtx = config.audioCtx
+
+
 #### `progress <float>`
 A summary of how complete all the Assets’ loading processes are, from 0 to 1. 
 

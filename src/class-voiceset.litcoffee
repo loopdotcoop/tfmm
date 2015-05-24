@@ -16,6 +16,12 @@ Begin defining the `VoiceSet` class
       constructor: (config={}) ->
 
 
+#### `maestro <Maestro>`
+@todo describe
+
+        @maestro = config.maestro
+
+
 #### `ID <string>`
 Matches the id attribute of this instance’s corresponding `<ARTICLE>` element. 
 
@@ -86,6 +92,7 @@ The /voice-set/*.md frontmatter defines the VoiceSet’s voices.
             color:      @colors[i]
             sample:     @samples[i]
             visualizer: @visualizer
+            maestro:    @maestro
 
 Give the first voice focus. When a VoiceSet is 'active', microphone and 
 keyboard events are passed to its focused voice. 
@@ -153,7 +160,7 @@ Clear the outer-parts of the visualizer canvas, to reveal the image. @todo
 Trigger the Voice which currently has focus. 
 
       trigger: (velocity) ->
-        @voices[@focus].timeline.add velocity
+        @voices[@focus].trigger velocity
 
 
 

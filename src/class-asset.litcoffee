@@ -1,4 +1,5 @@
-()=====
+Asset
+=====
 
 #### Represents a single asset, eg an audio or image file
 
@@ -39,16 +40,16 @@ Can be local or remote, eg 'asset/audio/a.mp3' or 'http://example.com/b.jpg'.
         @url = config.url
 
 
-#### `onProgress <function>`
-Called each time progress is made. 
+#### `request <XMLHttpRequest|null>`
+Xx. 
 
-        #@onProgress = config.onProgress || ->
+        @request = null
 
 
-#### `onComplete <function>`
-Called when the Assets has completed. 
+#### `buffer <AudioBuffer|null>`
+Xx. 
 
-        #@onComplete = config.onComplete || ->
+        @buffer = null
 
 
 
@@ -64,19 +65,105 @@ Returns `0` if `load()` has already been called on the Asset. Otherwise returns
       load: ->
         if 'init' != @state then return 0
         @state = 'loading'
-        setTimeout(
-          (=> @progress = Math.random() * 0.5; @manager.progressHandler(); ),
-          Math.random() * 1000
-        )
-        setTimeout(
-          (=> @progress = Math.random() * 0.5 + 0.5; @manager.progressHandler(); ),
-          1000 + (Math.random() * 1000)
-        )
-        setTimeout(
-          (=> @state = 'complete'; @progress = 1; @manager.progressHandler(); @manager.completeHandler()),
-          2000 + (Math.random() * 1000)
-        )
+
+Instantiate an [XMLHttpRequest object](https://goo.gl/P8k0Np). 
+
+        @request = new XMLHttpRequest
+
+Listen for XMLHttpRequest events. 
+
+        @request.addEventListener 'progress', @progressHandler , false
+        @request.addEventListener 'error'   , @errorHandler    , false
+        @request.addEventListener 'abort'   , @abortHandler    , false
+        @request.addEventListener 'load'    , @loadHandler     , false
+
+Begin loading the file. @todo only use 'arraybuffer' for appropriate file types
+
+        @request.open 'GET', @url, true # method, url, async
+        @request.responseType = 'arraybuffer'
+        @request.send()
+
+
+        #setTimeout(
+        #  (=> @progress = Math.random() * 0.5; @manager.progressHandler(); ),
+        #  Math.random() * 1000
+        #)
+        #setTimeout(
+        #  (=> @progress = Math.random() * 0.5 + 0.5; @manager.progressHandler(); ),
+        #  1000 + (Math.random() * 1000)
+        #)
+        #setTimeout(
+        #  (=> @state = 'complete'; @progress = 1; @manager.progressHandler(); @manager.completeHandler()),
+        #  2000 + (Math.random() * 1000)
+        #)
         1
+
+
+
+
+#### `progressHandler()`
+- `event <ProgressEvent>`  Provides `lengthComputable`, `loaded` and `total`
+
+Deal with an [XMLHttpRequest 'progress' event](https://goo.gl/iXCpGH). 
+
+      progressHandler: (event) =>
+        if event.lengthComputable
+          @progress = event.loaded / event.total
+          @manager.progressHandler()
+        #@todo deal with (! event.lengthComputable), eg `total` is unknown
+
+
+
+
+#### `errorHandler()`
+- `event <Xx>`  @todo
+
+Deal with an [XMLHttpRequest 'error' event](https://goo.gl/iXCpGH). 
+
+      errorHandler: (event) =>
+        ª event
+        @manager.completeHandler 'oh no, error!'
+
+
+
+
+#### `abortHandler()`
+- `event <Xx>`  @todo
+
+Deal with an [XMLHttpRequest 'abort' event](https://goo.gl/iXCpGH). 
+
+      abortHandler: (event) =>
+        ª event
+        @manager.completeHandler 'oh no, abort!'
+
+
+
+
+#### `loadHandler()`
+Deal with an [XMLHttpRequest 'load' event](https://goo.gl/iXCpGH). 
+
+      loadHandler: =>
+        if 200 != @request.status
+          @manager.completeHandler "Load error, status #{@request.status}"
+        else
+          @state = 'processing'
+          @progress = 1
+          @manager.audioCtx.decodeAudioData @request.response, @completeHandler, @errorHandler
+
+
+
+
+#### `completeHandler()`
+- `buffer <AudioBuffer>`  The decoded audio data returned by `decodeAudioData()`
+
+Xx. 
+
+      completeHandler: (buffer) =>
+        @buffer = buffer
+        @state = 'complete'
+        @manager.completeHandler()
+
+
 
 
 

@@ -1,7 +1,7 @@
 Maestro Class
 =============
 
-#### Xx @todo describe
+#### Synchronizes visual events with audio events
 
 
 
@@ -14,6 +14,12 @@ Begin defining the `Maestro` class
       toString: -> "[object #{@C}]"
 
       constructor: (config={}) ->
+
+
+#### `audioCtx <AudioContext>`
+Xx. @todo describe
+
+        @audioCtx = config.audioCtx
 
 
 #### `renderers <array>`

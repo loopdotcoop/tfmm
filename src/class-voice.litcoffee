@@ -16,10 +16,17 @@ Begin defining the `Voice` class
       constructor: (config={}) ->
 
 
+#### `maestro <Maestro>`
+@todo describe
+
+        @maestro = config.maestro
+
+
 #### `timeline <Timeline>`
 Every voice has a single Timeline, which holds the current Flourishes. 
 
         @timeline = new Timeline
+          voice: @
 
 
 #### `hasFocus <boolean>`
@@ -66,7 +73,7 @@ The icon fill-color for this Voice. Note that we set the icon color here.
 An Asset representing the audio file for this Voice. 
 
         @sample = new Asset 
-          url: "./asset/audio/#{config.sample}"
+          url: "asset/audio/#{config.sample}.mp3"
 
         #@$audio = document.createElement 'audio'
         #@$audio.setAttribute 'src', "./asset/audio/#{@sample}"
@@ -95,8 +102,11 @@ Xx.
         @icon.fillStyle = @color #@todo investigate why color is black without this line
 
 
+
+
 #### `render()`
-Xx. 
+- `frame <object>`            The current moment’s frame object
+- `visualizerSize <integer>`  Xx
 
       render: (frame, visualizerSize) ->
 
@@ -129,5 +139,31 @@ fraction from 0 to 1 of the given canvas `size`.
         pos = (size - scale) / 2
         context.fillRect pos, pos, scale, scale
 
+
+
+
+#### `trigger()`
+- `velocity <float>`  The power of the trigger, from 0 to 1
+
+Add a Flourish to the timeline, and play the sample. 
+
+      trigger: (velocity) ->
+        @timeline.add velocity
+        @play 0
+
+
+
+
+#### `play()`
+- `velocity <float>`  The loudness to play the sample, from 0 to 1
+- `stamp <float>`     A timestamp, passed to the `when` argument of `start()`
+
+Play the sample. 
+
+      play: (velocity, stamp) ->
+        source = @maestro.audioCtx.createBufferSource()
+        source.buffer = @sample.buffer
+        source.connect @maestro.audioCtx.destination
+        source.start stamp
 
 

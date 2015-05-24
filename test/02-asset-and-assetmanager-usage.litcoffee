@@ -62,7 +62,7 @@
       -> new Asset
 
       "Asset instance has expected enumerable properties"
-      'setManager,state,progress,manager,url,C,toString,load'
+      'setManager,completeHandler,loadHandler,abortHandler,errorHandler,progressHandler,state,progress,manager,url,request,buffer,C,toString,load'
       (mock) -> (prop for prop of mock).join()
 
       "`C` is 'Asset'" #@todo and immutable
@@ -97,7 +97,7 @@
       -> new AssetManager
 
       "AssetManager instance has expected enumerable properties"
-      'progress,assets,onProgress,onComplete,C,toString,add,load,progressHandler,completeHandler'
+      'audioCtx,progress,assets,onProgress,onComplete,C,toString,add,load,progressHandler,completeHandler'
       (mock) -> (prop for prop of mock).join()
 
       "`C` is 'AssetManager'" #@todo and immutable
@@ -152,17 +152,19 @@
       'init,init'
       (mock) -> (asset.state for asset in mock.assets).join()
 
-      "First call to `load()` reports that two Assets started loading"
-      2
-      (mock) -> mock.load()
-
-      "After `load()`, both Assets’ states are 'loading'"
-      'loading,loading'
-      (mock) -> (asset.state for asset in mock.assets).join()
-
-      "Second call to `load()` reports that no Assets have started loading"
-      0
-      (mock) -> mock.load()
+      #@todo simulate an XMLHttpRequest object
+      #
+      #"First call to `load()` reports that two Assets started loading"
+      #2
+      #(mock) -> mock.load()
+      #
+      #"After `load()`, both Assets’ states are 'loading'"
+      #'loading,loading'
+      #(mock) -> (asset.state for asset in mock.assets).join()
+      #
+      #"Second call to `load()` reports that no Assets have started loading"
+      #0
+      #(mock) -> mock.load()
 
 
 

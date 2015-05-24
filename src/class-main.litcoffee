@@ -16,6 +16,12 @@ Properties
 ----------
 
 
+#### `audioCtx <AudioContext>`
+Xx. @todo describe
+
+        @audioCtx = new (window.AudioContext || window.webkitAudioContext)
+
+
 #### `active <integer>`
 The active VoiceSet in `@voiceSets`, or `null` if no VoiceSet is active. 
 
@@ -26,6 +32,13 @@ The active VoiceSet in `@voiceSets`, or `null` if no VoiceSet is active.
 The array built by [Apage’s src/static-main.litcoffee](https://goo.gl/I8Kf6w). 
 
         @arts = config.arts
+
+
+#### `maestro <Maestro>`
+Create an animation controller. 
+
+        @maestro = new Maestro
+          audioCtx:  @audioCtx
 
 
 #### `$$voiceSets <live HTMLCollection>`
@@ -41,12 +54,9 @@ and `initVoiceSets()` also records a reference to these instances in `arts`.
 
         @voiceSets = @initVoiceSets()
 
+Tell Maestro about the VoiceSets. 
 
-#### `maestro <Maestro>`
-Create an animation controller. 
-
-        @maestro = new Maestro
-          renderers: @voiceSets
+        @maestro.renderers = @voiceSets
 
 
 #### `$progressWrap <HTMLDivElement>`
@@ -100,6 +110,7 @@ Instantiate a VoiceSet instance for each /voice-set/*.md file.
             @arts[$voiceSet.id].voiceSet = new VoiceSet
               $voiceSet: $voiceSet
               front:     front
+              maestro:   @maestro
 
 
 
@@ -115,6 +126,7 @@ Create an AssetManager instance.
         assetManager = new AssetManager
           onProgress: @onLoadProgress
           onComplete: @onLoadComplete
+          audioCtx:   @audioCtx
 
 Tell the AssetManager about the Voices’ samples. 
 
@@ -151,7 +163,7 @@ Note `=>` because `onLoadComplete()` is called from the AssetManager’s context
 
       onLoadComplete: (error) =>
         if error
-          alert error
+          ª error
         else
           document.body.setAttribute 'class', 'complete'
           @enableUserInput()
