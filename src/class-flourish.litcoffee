@@ -22,6 +22,12 @@ Begin defining the `Flourish` class
         @voice = config.voice
 
 
+#### `blotRenderer <function>`
+@todo describe
+
+        @blotRenderer = config.blotRenderer
+
+
 #### `hasScheduled <boolean>`
 True if the Flourish has scheduled its audio to be triggered. 
 
@@ -58,7 +64,7 @@ Define public methods
 
 Draw the Flourish on a given `<CANVAS>` context. 
 
-      render: (frame, context, size) ->
+      render: (frame, ctx2d, size) ->
         now = frame.frac2000
         if @start + @duration < now then return
         if @start > now then return @lookahead now, frame
@@ -66,11 +72,10 @@ Draw the Flourish on a given `<CANVAS>` context.
 
         @hasScheduled = false #@todo better system?
 
-        thing = 1 - 1 / ( @duration / (now - @start) )
+Draw the blot. 
 
-        scale = size * @velocity * thing
-        pos = (size - scale) / 2
-        context.fillRect pos, pos, scale, scale
+        time = 1 / ( @duration / (now - @start) )
+        @blotRenderer time, @velocity, ctx2d, size
 
 
 

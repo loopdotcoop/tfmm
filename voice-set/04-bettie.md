@@ -1,10 +1,11 @@
 ---
 points:  5 6  2 3
-colors:  green         orange        gold
+colors:  brown        orange       gold
 samples: 04-bettie-1  04-bettie-2  04-bettie-3
+blots:   triangle     oddtriangle  triangle
 ---
 
-Bettie
+Roarrr
 ======
 
-It is a thing!
+Grumblings and rumblings in the cardboard jungle.

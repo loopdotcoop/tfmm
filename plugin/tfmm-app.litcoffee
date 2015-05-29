@@ -18,6 +18,7 @@ Inject CSS
     body {
       overflow: hidden;
       text-align: center;
+      padding-top: 2em;
       background: #111;
       color: #ccc;
     }
@@ -87,16 +88,22 @@ Inject CSS
       display: inline-block;
       opacity: 0; /* becomes `1` when preload is complete */
       vertical-align: top;
-      width: 4em;
-      height: 4em;
+      width: 8em;
+      height: 8em;
       cursor: pointer;
-      border: 4px solid magenta;
+      border-top:    8px solid rgba(255,255,255,.4);
       transition: all .5s;
     }
+    article[data-apage-dname="_voice-set_"]:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
     article[data-apage-dname="_voice-set_"].active {
-      border: 4px solid orange;
+      border-top:    0px solid rgba(255,255,255,0);
       width: 40em;
       height: 40em;
+    }
+    article[data-apage-dname="_voice-set_"].active:hover {
+      background-color: rgba(255,255,255,0);
     }
     article[data-apage-dname="_voice-set_"] canvas.visualizer {
       width: 100%;
@@ -105,6 +112,8 @@ Inject CSS
     article[data-apage-dname="_voice-set_"] h1,
     article[data-apage-dname="_voice-set_"] p {
       position: absolute;
+      text-align: left;
+      opacity: 0;
       transition: all .5s;
     }
     article[data-apage-dname="_voice-set_"] h1 {
@@ -117,15 +126,17 @@ Inject CSS
     }
     article[data-apage-dname="_voice-set_"].active h1 {
       font-size: 80px;
+      opacity: .8;
     }
     article[data-apage-dname="_voice-set_"].active p {
       font-size: 40px;
+      opacity: .9;
     }
     article[data-apage-dname="_voice-set_"] canvas.icon {
       display: inline-block;
-      margin:  -1em .1em 0 .1em;
-      width:  .5em;
-      height: .5em;
+      margin:  -2em .2em 0 .2em;
+      width:  1em;
+      height: 1em;
       transition: all .5s;
     }
     article[data-apage-dname="_voice-set_"].active canvas.icon {

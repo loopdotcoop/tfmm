@@ -1,10 +1,11 @@
 ---
 points:  5 6  2 3
-colors:  purple      
+colors:  brown      
 samples: 03-krum-1
+blots:   circle
 ---
 
-Krum
-====
+Kanga
+=====
 
-Hi! 
+A bouncing chattering springy noise! 

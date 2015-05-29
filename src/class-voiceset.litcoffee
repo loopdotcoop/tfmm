@@ -37,7 +37,7 @@ Index of the Voice in `@voices` which currently has focus.
 #### `size <integer>`
 Current width and height for the visualizer `@$canvas` (always square). 
 
-        @size = 32
+        @size = 128
 
 
 #### `points <array>`
@@ -57,12 +57,21 @@ Each Voice is given a reference to an audio file in /asset/audio, eg 'foo.mp3'.
 
         @samples = config.front.samples.split /\s+/
 
+
+#### `blots <array>`
+Each Voice is given a Blot rendering style, eg 'square' or 'dots'. 
+
+        @blots = config.front.blots.split /\s+/
+
+
 Validate values taken from /voice-set/*.md frontmatter. 
 
         if 5 < @colors.length then throw new Error "
           '#{@ID}' frontmatter contains #{@colors.length} colors"
         if @samples.length != @colors.length then throw new Error "
           '#{@ID}' frontmatter contains unequal colors and samples"
+        if @blots.length != @colors.length then throw new Error "
+          '#{@ID}' frontmatter contains unequal colors and blots"
 
 
 #### `canvas <HTMLCanvasElement>`
@@ -79,6 +88,7 @@ A `<CANVAS>` element to draw the VoiceSet’s visualizer on.
 A reference to the drawing-context of the visualizer `<CANVAS>`. 
 
         @visualizer = @$canvas.getContext '2d'
+        @visualizer.globalCompositeOperation = 'screen' #@todo why is this not enough?
 
 
 #### `voices <array>`
@@ -88,11 +98,12 @@ The /voice-set/*.md frontmatter defines the VoiceSet’s voices.
         i = @colors.length
         while i--
           @voices.push new Voice
-            $voiceSet:  config.$voiceSet
-            color:      @colors[i]
-            sample:     @samples[i]
-            visualizer: @visualizer
-            maestro:    @maestro
+            $voiceSet:    config.$voiceSet
+            color:        @colors[i]
+            sample:       @samples[i]
+            blotRenderer: Blot[ @blots[i] ]
+            visualizer:   @visualizer
+            maestro:      @maestro
 
 Give the first voice focus. When a VoiceSet is 'active', microphone and 
 keyboard events are passed to its focused voice. 
@@ -109,13 +120,13 @@ Define public methods
 Xx. 
 
       activate: ->
-        @size = 256
+        @size = 512
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
         voice.activate() for voice in @voices
 
       deactivate: ->
-        @size = 32
+        @size = 128
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
         voice.deactivate() for voice in @voices
@@ -129,6 +140,7 @@ Xx.
 Clear all previously rendered pixels in the visualizer canvas. 
 
         @visualizer.clearRect 0, 0, @size, @size
+        @visualizer.globalCompositeOperation = 'screen' #@todo why set this every frame?
 
 Every two seconds, flip which Voice has focus. 
 
@@ -137,10 +149,9 @@ Every two seconds, flip which Voice has focus.
           if @voices.length <= ++@focus then @focus = 0
           @voices[@focus].hasFocus = true
 
-Every eight seconds, quieten each Voice. 
+Every two seconds, quieten each Voice. 
 
-        if frame.flip8000
-          voice.quieten 0.3, 0.05 for voice in @voices
+          voice.quieten 0.9, 0.05 for voice in @voices
 
 Allow each voice to update its own icon, and draw on the visualizer canvas. 
 
@@ -148,8 +159,6 @@ Allow each voice to update its own icon, and draw on the visualizer canvas.
 
 Clear the outer-parts of the visualizer canvas, to reveal the image. @todo
 
-        @visualizer.fillStyle = "rgba(0,100,0,.5)"
-        @visualizer.fillRect 0, 0, frame.frac8000*@size, frame.frac8000*@size
 
 
 

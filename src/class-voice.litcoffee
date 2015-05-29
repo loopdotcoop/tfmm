@@ -43,7 +43,7 @@ Whether this Voice is currently receptive to keyboard or microphone input.
 #### `size <integer>`
 The current width and height for the icon `@$canvas` (which is always square). 
 
-        @size = 8
+        @size = 16
 
 
 #### `$canvas <HTMLCanvasElement>`
@@ -81,6 +81,12 @@ An Asset representing the audio file for this Voice.
           url: "asset/audio/#{config.sample}.mp3"
 
 
+#### `blotRenderer <function>`
+Each Voice is given a Blot rendering function, eg `Blot.dots()`. 
+
+        @blotRenderer = config.blotRenderer
+
+
 
 
 Define public methods
@@ -96,7 +102,7 @@ Xx.
         @icon.fillStyle = @color #@todo investigate why color is black without this line
 
       deactivate: ->
-        @size = 8
+        @size = 16
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
         @icon.fillStyle = @color #@todo investigate why color is black without this line
@@ -105,21 +111,20 @@ Xx.
 
 
 #### `render()`
-- `frame <object>`   The current moment’s frame object
-- `vSize <integer>`  Xx
+- `frame <object>`     The current moment’s frame object
+- `visSize <integer>`  visualizer size
 
-      render: (frame, vSize) ->
+      render: (frame, visSize) ->
 
         @now = frame
-
-Alter the icon when this Voice has focus. 
-
-        scaleMultiplier = if @hasFocus then 1 else 0.5
 
 Render the current icon frame. 
 
         @icon.clearRect 0, 0, @size, @size
-        @drawSquare @icon, frame.frac8000 * scaleMultiplier, @size
+        time = if 0.5 > frame.frac2000 then 1 - frame.frac2000 else frame.frac2000
+        time = (time - 0.5) / 4
+        time += if ! @hasFocus then 0.6 else 0.3
+        @blotRenderer time, 1, @icon, @size
 
 Add to the current frame of the visualizer animation. 
 
@@ -127,22 +132,7 @@ Add to the current frame of the visualizer animation.
 
 Xx. 
 
-        flourish.render frame, @visualizer, vSize for flourish in @flourishes
-
-
-
-
-#### `drawSquare()`
-- `context <CanvasRenderingContext2D>`  The canvas context to draw on
-- `scale <float>`                       Fraction of the canvas the square fills
-- `size <integer>`                      Pixel width and height of the canvas
-Draws a square at the center of the given `context`, where `scale` is the 
-fraction from 0 to 1 of the given canvas `size`. 
-
-      drawSquare: (context, scale, size) ->
-        scale = size * scale # convert `scale` from fraction to actual pixels
-        pos = (size - scale) / 2
-        context.fillRect pos, pos, scale, scale
+        flourish.render frame, @visualizer, visSize for flourish in @flourishes
 
 
 
@@ -154,10 +144,11 @@ Add a Flourish to the `flourishes` list, and play the sample.
 
       trigger: (velocity) ->
         @flourishes.push new Flourish
-          start:    @now.frac2000
-          duration: 0.2
-          velocity: velocity
-          voice:    @
+          start:        @now.frac2000
+          duration:     0.2
+          velocity:     velocity
+          voice:        @
+          blotRenderer: @blotRenderer
         @play velocity, 0
 
 
