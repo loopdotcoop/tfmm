@@ -151,7 +151,7 @@ Every two seconds, flip which Voice has focus.
 
 Every two seconds, quieten each Voice. 
 
-          voice.quieten 0.9, 0.05 for voice in @voices
+          voice.quieten 0.8, 0.05 for voice in @voices
 
 Allow each voice to update its own icon, and draw on the visualizer canvas. 
 

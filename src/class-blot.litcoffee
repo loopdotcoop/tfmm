@@ -73,7 +73,9 @@ Xx.
 
 
 
+
     Blot.galaxy = (time, velocity, ctx2d, size) ->
+      time = 1 - time # reverse direction
       i = 5
       while i--
         ctx2d.setTransform(

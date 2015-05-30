@@ -15,12 +15,14 @@ Inject CSS
      .innerHTML += """
 
     /* injected by the TfmmApp plugin */
+    @import url(http://fonts.googleapis.com/css?family=Podkova:400,700);
     body {
       overflow: hidden;
       text-align: center;
       padding-top: 2em;
       background: #111;
       color: #ccc;
+      font-family: Podkova, Arial, sans-serif; 
     }
     a {
       color: #ccc;

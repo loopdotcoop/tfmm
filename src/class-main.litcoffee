@@ -177,6 +177,20 @@ Xx. @todo describe
 
       enableUserInput: ->
 
+Accept mic input to trigger the voice which currently has focus. 
+
+        try
+          micIn = new MicIn
+            ctxAudio: @audioCtx #@todo rename to `ctxAudio` everywhere
+            maestro: @maestro
+            callback:
+              threshold: 0.5
+              fn: (velocity) =>
+                if null == @active then return
+                @active.trigger velocity
+
+        catch e then alert e
+
 Press `[q]` to trigger the voice which currently has focus. @todo other keys
 
         window.addEventListener 'keydown', (event) =>
@@ -214,7 +228,7 @@ Deactivate the previously active VoiceSet (in fact, deactivate all VoiceSets).
 
         @active = null
         for voiceSet in @voiceSets
-          voiceSet.deactivate()
+          if voiceSet.deactivate then voiceSet.deactivate() #@todo create `MicIn.deactivate()`
 
 Activate the newly active VoiceSet. 
 
