@@ -97,7 +97,7 @@ Xx. @todo describe
 Step through each ‘voice-set’ article on the page. CoffeeScript will return 
 the VoiceSets in an array, after the `for` loop has completed. 
 
-        for $voiceSet in @$$voiceSets
+        voiceSets = for $voiceSet in @$$voiceSets
           do ($voiceSet) =>
 
 Get the fields from each ‘voice-set’ article’s frontmatter. 
@@ -111,6 +111,25 @@ Instantiate a VoiceSet instance for each /voice-set/*.md file.
               $voiceSet: $voiceSet
               front:     front
               maestro:   @maestro
+
+Create a chain of `previous` and `next` references between VoiceSets, which 
+will help us respond to `left` and `right` arrow keys. @todo and an automatic processions mode @todo move into Akaybe function
+
+        if voiceSets.length # just in case no VoiceSets have been defined
+          previous = null # to begin with, there’s no `previous` VoiceSet
+          for current in voiceSets # step through in DOM order
+            if previous # true if this is NOT the first loop iteration
+              current.previous = previous # from the current to the previous
+              previous.next    = current  # from the previous to the current
+            else # true if this IS the first loop iteration
+              first = current # useful after the loop has finished
+            previous = current # prep for the next VoiceSet
+          current.next = first # from the rightmost VoiceSet to the leftmost
+          first.previous = current # from the leftmost VoiceSet to the rightmost
+
+Return `voiceSets`, so that it can be recorded as an instance property. 
+
+        return voiceSets
 
 
 
@@ -191,12 +210,36 @@ Accept mic input to trigger the voice which currently has focus.
 
         catch e then alert e
 
-Press `[q]` to trigger the voice which currently has focus. @todo other keys
+Respond to keyboard input. 
 
         window.addEventListener 'keydown', (event) =>
+
+The number keys `1` to `9` select VoiceSets at index `0` to `8`. 
+
+          if 49 <= event.keyCode && 57 >= event.keyCode
+            @simulateClick @voiceSets[ event.keyCode - 48 - 1 ]?.$canvas
+
+          if 97 <= event.keyCode && 105 >= event.keyCode
+            @simulateClick @voiceSets[ event.keyCode - 96 - 1 ]?.$canvas
+
+Other keypress events depend on a VoiceSet being active. 
+
           if null == @active then return
-          if 81 == event.keyCode
+          #ª event.keyCode
+
+Either of the two `0` keys triggers the voice which currently has focus. 
+
+          if 48 == event.keyCode || 96 == event.keyCode
             @active.trigger 1 # velocity
+
+The `left` and `right` keys shift between VoiceSets. 
+
+          if 37 == event.keyCode
+            @simulateClick @active.previous.$canvas
+
+          if 39 == event.keyCode
+            @simulateClick @active.next.$canvas
+
 
 Click on the page background to return to the splash page. 
 
@@ -208,10 +251,13 @@ or send the click message to its VoiceSet instance.
         for $voiceSet in @$$voiceSets
           do ($voiceSet) ->
             $voiceSet.addEventListener 'click', (event) ->
-              if -1 == @className.indexOf 'active'
+              if ! ªhas @className, 'active' # the `<ARTICLE>`’s class attribute
                 window.location.hash = @id.substr(5).replace /_/g, '/' #@todo neater solution
               else
-                console.log arts[@.id].voiceSet #@todo react to click
+                if ªhas event.target.className, 'visualizer'
+                  arts[@.id].voiceSet.trigger 1 #@todo velocity depends on Y coord
+                else if ªhas event.target.className, 'icon'
+                  ª event.target #@todo trigger a one-off sample
               event.stopPropagation()
 
 
@@ -235,6 +281,26 @@ Activate the newly active VoiceSet.
         if current.voiceSet
           @active = current.voiceSet
           @active.activate()
+
+
+
+
+#### `simulateClick()`
+- `$element <HTMLElement>`  The HTML element to click
+
+Simulates a mouse click on the given element. 
+http://mdn.beonex.com/en/DOM/element.dispatchEvent.html
+
+      simulateClick: ($element) ->
+        if $element
+          evt = document.createEvent 'MouseEvents'
+          evt.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, 
+            false, false, false, 0, null)
+          canceled = ! $element.dispatchEvent(evt)
+          if (canceled)
+            # A handler called preventDefault
+          else
+            # None of the handlers called preventDefault
 
 
 
