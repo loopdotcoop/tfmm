@@ -97,7 +97,6 @@ Inject CSS
       width: 8rem;
       height: 8rem;
       cursor: pointer;
-      border-top:    8px solid rgba(255,255,255,.4);
       transition: all .5s;
     }
     article[data-apage-dname="_voice-set_"]:hover {

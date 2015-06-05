@@ -1,5 +1,5 @@
 ---
-points:  1 2  3 4  3 8  1 7
+points:  .5 .3  1 0  .75 .7  .9 .9  .5 .8
 bkgnd:   #024
 colors:  #ffc           #bf8           #3cc           #66f
 samples: 03-beatrice-1  03-beatrice-2  03-beatrice-3  03-beatrice-4

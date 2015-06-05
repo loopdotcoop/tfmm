@@ -133,7 +133,7 @@
   };
 
   ªpopulate = function(candidate, subject, rules, updating) {
-    var errors, j, key, l, len, len1, rule, test, type, use, value;
+    var errors, j, key, len, len1, m, rule, test, type, use, value;
     if (ªO !== ªtype(candidate)) {
       throw new Error("`candidate` is type '" + (ªtype(candidate)) + "' not 'object'");
     }
@@ -157,8 +157,8 @@
     if (errors.length) {
       throw new Error(errors.join('\n'));
     }
-    for (l = 0, len1 = rules.length; l < len1; l++) {
-      rule = rules[l];
+    for (m = 0, len1 = rules.length; m < len1; m++) {
+      rule = rules[m];
       key = rule[0], use = rule[1], type = rule[2], test = rule[3];
       value = candidate[key];
       if (void 0 === value) {
@@ -582,14 +582,14 @@
           $voiceSet = ref[j];
           results.push((function(_this) {
             return function($voiceSet) {
-              var fn1, front, k, l, len1, ref1, ref2, v;
+              var fn1, front, k, len1, m, ref1, ref2, v;
               front = {};
               ref1 = _this.arts[$voiceSet.id].front;
               fn1 = function(k, v) {
                 return front[k] = v;
               };
-              for (l = 0, len1 = ref1.length; l < len1; l++) {
-                ref2 = ref1[l], k = ref2[0], v = ref2[1];
+              for (m = 0, len1 = ref1.length; m < len1; m++) {
+                ref2 = ref1[m], k = ref2[0], v = ref2[1];
                 fn1(k, v);
               }
               return _this.arts[$voiceSet.id].voiceSet = new VoiceSet({
@@ -622,7 +622,7 @@
     };
 
     Main.prototype.initAssetManager = function() {
-      var assetManager, j, l, len, len1, ref, ref1, voice, voiceSet;
+      var assetManager, j, len, len1, m, ref, ref1, voice, voiceSet;
       assetManager = new AssetManager({
         onProgress: this.onLoadProgress,
         onComplete: this.onLoadComplete,
@@ -632,8 +632,8 @@
       for (j = 0, len = ref.length; j < len; j++) {
         voiceSet = ref[j];
         ref1 = voiceSet.voices;
-        for (l = 0, len1 = ref1.length; l < len1; l++) {
-          voice = ref1[l];
+        for (m = 0, len1 = ref1.length; m < len1; m++) {
+          voice = ref1[m];
           assetManager.add(voice.sample);
         }
       }
@@ -1024,7 +1024,7 @@
     };
 
     VoiceSet.prototype.render = function(frame) {
-      var j, l, len, len1, len2, m, ref, ref1, ref2, voice;
+      var i, j, l, len, len1, len2, m, o, ref, ref1, ref2, voice, y;
       if (frame.flip2000) {
         ref = this.voices;
         for (j = 0, len = ref.length; j < len; j++) {
@@ -1036,18 +1036,31 @@
         }
         this.voices[this.focus].hasFocus = true;
         ref1 = this.voices;
-        for (l = 0, len1 = ref1.length; l < len1; l++) {
-          voice = ref1[l];
+        for (m = 0, len1 = ref1.length; m < len1; m++) {
+          voice = ref1[m];
           voice.quieten(0.8, 0.05);
         }
       }
+      this.visualizer.beginPath();
+      this.visualizer.moveTo(this.points[0] * this.size, this.points[1] * this.size);
+      l = this.points.length;
+      i = 2;
+      while (i < l) {
+        this.visualizer.lineTo(this.points[i++] * this.size, this.points[i++] * this.size);
+      }
+      i = l - 3;
+      while (i > 0) {
+        y = this.points[i--] * this.size * .95;
+        this.visualizer.lineTo((1 - this.points[i--]) * this.size, y);
+      }
+      this.visualizer.clip();
       this.visualizer.clearRect(0, 0, this.size, this.size);
       this.visualizer.fillStyle = this.bkgnd;
       this.visualizer.fillRect(0, 0, this.size, this.size);
       this.visualizer.globalCompositeOperation = 'screen';
       ref2 = this.voices;
-      for (m = 0, len2 = ref2.length; m < len2; m++) {
-        voice = ref2[m];
+      for (o = 0, len2 = ref2.length; o < len2; o++) {
+        voice = ref2[o];
         voice.render(frame, this.size);
       }
       this.visualizer.setTransform(-1, 0, 0, 1, this.size, 0);
@@ -1181,7 +1194,7 @@
     };
 
     Tudor.prototype["do"] = function() {
-      var actual, art, artFail, artPass, article, e, error, expect, heading, j, job, l, len, len1, len2, m, mock, pge, pgeFail, pgePass, ref, ref1, ref2, result, runner, sec, secFail, secPass, section, summary;
+      var actual, art, artFail, artPass, article, e, error, expect, heading, j, job, len, len1, len2, m, mock, o, pge, pgeFail, pgePass, ref, ref1, ref2, result, runner, sec, secFail, secPass, section, summary;
       pge = [];
       mock = null;
       pgePass = pgeFail = 0;
@@ -1191,13 +1204,13 @@
         art = [];
         artPass = artFail = 0;
         ref1 = article.sections;
-        for (l = 0, len1 = ref1.length; l < len1; l++) {
-          section = ref1[l];
+        for (m = 0, len1 = ref1.length; m < len1; m++) {
+          section = ref1[m];
           sec = [];
           secPass = secFail = 0;
           ref2 = section.jobs;
-          for (m = 0, len2 = ref2.length; m < len2; m++) {
-            job = ref2[m];
+          for (o = 0, len2 = ref2.length; o < len2; o++) {
+            job = ref2[o];
             switch (ªtype(job)) {
               case ªF:
                 try {

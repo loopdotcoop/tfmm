@@ -312,7 +312,7 @@ for (i=0, l=$arts.length; i<l; i++) {
   };
 
   ªpopulate = function(candidate, subject, rules, updating) {
-    var errors, j, key, l, len, len1, rule, test, type, use, value;
+    var errors, j, key, len, len1, m, rule, test, type, use, value;
     if (ªO !== ªtype(candidate)) {
       throw new Error("`candidate` is type '" + (ªtype(candidate)) + "' not 'object'");
     }
@@ -336,8 +336,8 @@ for (i=0, l=$arts.length; i<l; i++) {
     if (errors.length) {
       throw new Error(errors.join('\n'));
     }
-    for (l = 0, len1 = rules.length; l < len1; l++) {
-      rule = rules[l];
+    for (m = 0, len1 = rules.length; m < len1; m++) {
+      rule = rules[m];
       key = rule[0], use = rule[1], type = rule[2], test = rule[3];
       value = candidate[key];
       if (void 0 === value) {
@@ -761,14 +761,14 @@ for (i=0, l=$arts.length; i<l; i++) {
           $voiceSet = ref[j];
           results.push((function(_this) {
             return function($voiceSet) {
-              var fn, front, k, l, len1, ref1, ref2, v;
+              var fn, front, k, len1, m, ref1, ref2, v;
               front = {};
               ref1 = _this.arts[$voiceSet.id].front;
               fn = function(k, v) {
                 return front[k] = v;
               };
-              for (l = 0, len1 = ref1.length; l < len1; l++) {
-                ref2 = ref1[l], k = ref2[0], v = ref2[1];
+              for (m = 0, len1 = ref1.length; m < len1; m++) {
+                ref2 = ref1[m], k = ref2[0], v = ref2[1];
                 fn(k, v);
               }
               return _this.arts[$voiceSet.id].voiceSet = new VoiceSet({
@@ -801,7 +801,7 @@ for (i=0, l=$arts.length; i<l; i++) {
     };
 
     Main.prototype.initAssetManager = function() {
-      var assetManager, j, l, len, len1, ref, ref1, voice, voiceSet;
+      var assetManager, j, len, len1, m, ref, ref1, voice, voiceSet;
       assetManager = new AssetManager({
         onProgress: this.onLoadProgress,
         onComplete: this.onLoadComplete,
@@ -811,8 +811,8 @@ for (i=0, l=$arts.length; i<l; i++) {
       for (j = 0, len = ref.length; j < len; j++) {
         voiceSet = ref[j];
         ref1 = voiceSet.voices;
-        for (l = 0, len1 = ref1.length; l < len1; l++) {
-          voice = ref1[l];
+        for (m = 0, len1 = ref1.length; m < len1; m++) {
+          voice = ref1[m];
           assetManager.add(voice.sample);
         }
       }
@@ -1203,7 +1203,7 @@ for (i=0, l=$arts.length; i<l; i++) {
     };
 
     VoiceSet.prototype.render = function(frame) {
-      var j, l, len, len1, len2, m, ref, ref1, ref2, voice;
+      var i, j, l, len, len1, len2, m, o, ref, ref1, ref2, voice, y;
       if (frame.flip2000) {
         ref = this.voices;
         for (j = 0, len = ref.length; j < len; j++) {
@@ -1215,18 +1215,31 @@ for (i=0, l=$arts.length; i<l; i++) {
         }
         this.voices[this.focus].hasFocus = true;
         ref1 = this.voices;
-        for (l = 0, len1 = ref1.length; l < len1; l++) {
-          voice = ref1[l];
+        for (m = 0, len1 = ref1.length; m < len1; m++) {
+          voice = ref1[m];
           voice.quieten(0.8, 0.05);
         }
       }
+      this.visualizer.beginPath();
+      this.visualizer.moveTo(this.points[0] * this.size, this.points[1] * this.size);
+      l = this.points.length;
+      i = 2;
+      while (i < l) {
+        this.visualizer.lineTo(this.points[i++] * this.size, this.points[i++] * this.size);
+      }
+      i = l - 3;
+      while (i > 0) {
+        y = this.points[i--] * this.size * .95;
+        this.visualizer.lineTo((1 - this.points[i--]) * this.size, y);
+      }
+      this.visualizer.clip();
       this.visualizer.clearRect(0, 0, this.size, this.size);
       this.visualizer.fillStyle = this.bkgnd;
       this.visualizer.fillRect(0, 0, this.size, this.size);
       this.visualizer.globalCompositeOperation = 'screen';
       ref2 = this.voices;
-      for (m = 0, len2 = ref2.length; m < len2; m++) {
-        voice = ref2[m];
+      for (o = 0, len2 = ref2.length; o < len2; o++) {
+        voice = ref2[o];
         voice.render(frame, this.size);
       }
       this.visualizer.setTransform(-1, 0, 0, 1, this.size, 0);
@@ -1262,7 +1275,7 @@ for (i=0, l=$arts.length; i<l; i++) {
 (function() {
   var tfmm;
 
-  $('style').innerHTML += "\n/* injected by the TfmmApp plugin */\n@import url(http://fonts.googleapis.com/css?family=Podkova:400,700);\nhtml {\n  height: 100%;\n  background: #111 url(asset/image/tfmm-main-bkgnd.jpg) 100% 100% no-repeat;\n  background-size: cover;\n}\nbody {\n  overflow: hidden;\n  text-align: center;\n  padding-top: 2em;\n  color: #ccc;\n  font-family: Podkova, Arial, sans-serif; \n}\na {\n  color: #ccc;\n  text-decoration: none;\n  transition: all .5s;\n}\na:hover {\n  color: #f2f;\n}\narticle {\n  display: none;\n}\narticle.active,\n#apage_readme {\n  display: block;\n}\n#apage_readme h1 {\n  display: none;\n}\n#apage_readme li {\n  list-style-type: none;\n}\n#apage_readme h4 a,\n#apage_readme li a {\n  position: absolute;\n  z-index: 99;\n  padding: .5em;\n}\n#apage_readme h4 a {\n  top:    0;\n  right:  0;\n}\n#apage_readme li a[href=\"http://loop.coop\"] {\n  top:    0;\n  left:   0;\n}\n#apage_readme li a[href*=\"www.facebook.com\"] {\n  bottom: 0;\n  left:   0;\n}\n#apage_readme li a[href*=\"twitter.com\"] {\n  bottom: 0;\n  left:   100px;\n}\n#apage_readme li a[href$=\"documentation\"] {\n  bottom: 0;\n  right:  0;\n}\n\narticle[data-apage-dname=\"_doc_\"] {\n  position: absolute;\n  z-index: 99;\n  top:    15%;\n  right:  20%;\n  bottom: 20%;\n  left:   20%;\n  overflow-y: scroll;\n  text-align: left;\n  border: 4px solid cyan; \n}\n\narticle[data-apage-dname=\"_voice-set_\"] {\n  position: relative;\n  z-index: 55;\n  display: inline-block;\n  opacity: 0; /* becomes `1` when preload is complete */\n  vertical-align: top;\n  width: 8rem;\n  height: 8rem;\n  cursor: pointer;\n  border-top:    8px solid rgba(255,255,255,.4);\n  transition: all .5s;\n}\narticle[data-apage-dname=\"_voice-set_\"]:hover {\n  background-color: rgba(255,255,255,0.1);\n}\narticle[data-apage-dname=\"_voice-set_\"].active {\n  border-top:    0px solid rgba(255,255,255,0);\n  width: 40rem;\n  height: 40rem;\n}\narticle[data-apage-dname=\"_voice-set_\"].active:hover {\n  background-color: rgba(255,255,255,0);\n}\narticle[data-apage-dname=\"_voice-set_\"] canvas.visualizer {\n  width: 100%;\n  height: 100%;\n}\narticle[data-apage-dname=\"_voice-set_\"] h1,\narticle[data-apage-dname=\"_voice-set_\"] p {\n  position: absolute;\n  width: 8rem;\n  opacity: 0;\n  text-align: center;\n  transition: all .5s;\n}\narticle[data-apage-dname=\"_voice-set_\"] h1 {\n  margin-top: 0;\n  font-size: 8px;\n}\narticle[data-apage-dname=\"_voice-set_\"] p {\n  margin-top: 2em;\n  font-size: 4px;\n}\narticle[data-apage-dname=\"_voice-set_\"].active h1 {\n  width: 40rem;\n  font-size: 80px;\n  opacity: .8;\n}\narticle[data-apage-dname=\"_voice-set_\"].active p {\n  width: 40rem;\n  font-size: 40px;\n  opacity: .9;\n}\narticle[data-apage-dname=\"_voice-set_\"] canvas.icon {\n  display: inline-block;\n  margin:  -2em .2em 0 .2em;\n  width:  1em;\n  height: 1em;\n  transition: all .5s;\n}\narticle[data-apage-dname=\"_voice-set_\"].active canvas.icon {\n  margin:  -10em 1em 0 1em;\n  width:   5em;\n  height:  5em;\n}\n\nbody.complete article[data-apage-dname=\"_voice-set_\"] {\n  opacity: 1;\n}\nbody.complete div#progress-wrap {\n  border-top-width: 0;\n  opacity: 0;\n}\nbody.complete span#progress-bar {\n  height: 0;\n}\n\ndiv#progress-wrap {\n  position: absolute;\n  z-index: 199;\n  left:   10%;\n  right:  10%;\n  top:    50%;\n  bottom: 50%;\n  text-align: left;\n  border-top: .5em solid #f0f;\n  opacity: 1;\n  transition: all .5s;\n}\nspan#progress-bar {\n  display: inline-block;\n  background-color: orange;\n  height: .5em;\n  transition: all .5s;\n}";
+  $('style').innerHTML += "\n/* injected by the TfmmApp plugin */\n@import url(http://fonts.googleapis.com/css?family=Podkova:400,700);\nhtml {\n  height: 100%;\n  background: #111 url(asset/image/tfmm-main-bkgnd.jpg) 100% 100% no-repeat;\n  background-size: cover;\n}\nbody {\n  overflow: hidden;\n  text-align: center;\n  padding-top: 2em;\n  color: #ccc;\n  font-family: Podkova, Arial, sans-serif; \n}\na {\n  color: #ccc;\n  text-decoration: none;\n  transition: all .5s;\n}\na:hover {\n  color: #f2f;\n}\narticle {\n  display: none;\n}\narticle.active,\n#apage_readme {\n  display: block;\n}\n#apage_readme h1 {\n  display: none;\n}\n#apage_readme li {\n  list-style-type: none;\n}\n#apage_readme h4 a,\n#apage_readme li a {\n  position: absolute;\n  z-index: 99;\n  padding: .5em;\n}\n#apage_readme h4 a {\n  top:    0;\n  right:  0;\n}\n#apage_readme li a[href=\"http://loop.coop\"] {\n  top:    0;\n  left:   0;\n}\n#apage_readme li a[href*=\"www.facebook.com\"] {\n  bottom: 0;\n  left:   0;\n}\n#apage_readme li a[href*=\"twitter.com\"] {\n  bottom: 0;\n  left:   100px;\n}\n#apage_readme li a[href$=\"documentation\"] {\n  bottom: 0;\n  right:  0;\n}\n\narticle[data-apage-dname=\"_doc_\"] {\n  position: absolute;\n  z-index: 99;\n  top:    15%;\n  right:  20%;\n  bottom: 20%;\n  left:   20%;\n  overflow-y: scroll;\n  text-align: left;\n  border: 4px solid cyan; \n}\n\narticle[data-apage-dname=\"_voice-set_\"] {\n  position: relative;\n  z-index: 55;\n  display: inline-block;\n  opacity: 0; /* becomes `1` when preload is complete */\n  vertical-align: top;\n  width: 8rem;\n  height: 8rem;\n  cursor: pointer;\n  transition: all .5s;\n}\narticle[data-apage-dname=\"_voice-set_\"]:hover {\n  background-color: rgba(255,255,255,0.1);\n}\narticle[data-apage-dname=\"_voice-set_\"].active {\n  border-top:    0px solid rgba(255,255,255,0);\n  width: 40rem;\n  height: 40rem;\n}\narticle[data-apage-dname=\"_voice-set_\"].active:hover {\n  background-color: rgba(255,255,255,0);\n}\narticle[data-apage-dname=\"_voice-set_\"] canvas.visualizer {\n  width: 100%;\n  height: 100%;\n}\narticle[data-apage-dname=\"_voice-set_\"] h1,\narticle[data-apage-dname=\"_voice-set_\"] p {\n  position: absolute;\n  width: 8rem;\n  opacity: 0;\n  text-align: center;\n  transition: all .5s;\n}\narticle[data-apage-dname=\"_voice-set_\"] h1 {\n  margin-top: 0;\n  font-size: 8px;\n}\narticle[data-apage-dname=\"_voice-set_\"] p {\n  margin-top: 2em;\n  font-size: 4px;\n}\narticle[data-apage-dname=\"_voice-set_\"].active h1 {\n  width: 40rem;\n  font-size: 80px;\n  opacity: .8;\n}\narticle[data-apage-dname=\"_voice-set_\"].active p {\n  width: 40rem;\n  font-size: 40px;\n  opacity: .9;\n}\narticle[data-apage-dname=\"_voice-set_\"] canvas.icon {\n  display: inline-block;\n  margin:  -2em .2em 0 .2em;\n  width:  1em;\n  height: 1em;\n  transition: all .5s;\n}\narticle[data-apage-dname=\"_voice-set_\"].active canvas.icon {\n  margin:  -10em 1em 0 1em;\n  width:   5em;\n  height:  5em;\n}\n\nbody.complete article[data-apage-dname=\"_voice-set_\"] {\n  opacity: 1;\n}\nbody.complete div#progress-wrap {\n  border-top-width: 0;\n  opacity: 0;\n}\nbody.complete span#progress-bar {\n  height: 0;\n}\n\ndiv#progress-wrap {\n  position: absolute;\n  z-index: 199;\n  left:   10%;\n  right:  10%;\n  top:    50%;\n  bottom: 50%;\n  text-align: left;\n  border-top: .5em solid #f0f;\n  opacity: 1;\n  transition: all .5s;\n}\nspan#progress-bar {\n  display: inline-block;\n  background-color: orange;\n  height: .5em;\n  transition: all .5s;\n}";
 
   tfmm = new Tfmm({
     arts: arts,
@@ -1366,7 +1379,7 @@ window.addEventListener('hashchange', onHashchange);
   data-apage-opath="/voice-set/01-cici.md"
   data-apage-dname="_voice-set_"
   data-apage-order="1"
-  data-apage-front='[["points","1 2  3 4  3 8  1 7"],["bkgnd","#032"],["colors","green       orange      purple      teal"],["samples","01-cici-1   01-cici-2   01-cici-3   01-cici-4"],["blots","dots        square      triangle    galaxy"]]'
+  data-apage-front='[["points",".5 .3  1 0  .75 .7  .9 .9  .5 .8"],["bkgnd","#032"],["colors","green       orange      purple      teal"],["samples","01-cici-1   01-cici-2   01-cici-3   01-cici-4"],["blots","dots        square      triangle    galaxy"]]'
   data-apage-title="The Croakinator">
   <h1>The Croakinator</h1>
   <p>Croaking drain. Hidden Frog.</p>
@@ -1396,7 +1409,7 @@ window.addEventListener('hashchange', onHashchange);
   data-apage-opath="/voice-set/02-chris.md"
   data-apage-dname="_voice-set_"
   data-apage-order="2"
-  data-apage-front='[["points","5 6  2 3"],["bkgnd","#432"],["colors","blue         green        gold        red"],["samples","02-chris-1   02-chris-2   02-chris-3  02-chris-4"],["blots","dots         square       triangle    oddtriangle"]]'
+  data-apage-front='[["points",".5 .3  1 0  .75 .7  .9 .9  .5 .8"],["bkgnd","#432"],["colors","blue         green        gold        red"],["samples","02-chris-1   02-chris-2   02-chris-3  02-chris-4"],["blots","dots         square       triangle    oddtriangle"]]'
   data-apage-title="Flicks n Rings">
   <h1>Flicks n Rings</h1>
   <p>Signed advert bikes.</p>
@@ -1431,7 +1444,7 @@ window.addEventListener('hashchange', onHashchange);
   data-apage-opath="/voice-set/03-beatrice.md"
   data-apage-dname="_voice-set_"
   data-apage-order="3"
-  data-apage-front='[["points","1 2  3 4  3 8  1 7"],["bkgnd","#024"],["colors","#ffc           #bf8           #3cc           #66f"],["samples","03-beatrice-1  03-beatrice-2  03-beatrice-3  03-beatrice-4"],["blots","dots           dots           dots           dots"]]'
+  data-apage-front='[["points",".5 .3  1 0  .75 .7  .9 .9  .5 .8"],["bkgnd","#024"],["colors","#ffc           #bf8           #3cc           #66f"],["samples","03-beatrice-1  03-beatrice-2  03-beatrice-3  03-beatrice-4"],["blots","dots           dots           dots           dots"]]'
   data-apage-title="Plip">
   <h1>Plip</h1>
   <p>Clicks, drops, and dripping taps.</p>
@@ -1460,7 +1473,7 @@ window.addEventListener('hashchange', onHashchange);
   data-apage-opath="/voice-set/04-dan.md"
   data-apage-dname="_voice-set_"
   data-apage-order="4"
-  data-apage-front='[["points","1 2  3 4  3 8  1 7"],["bkgnd","#453"],["colors","cyan        magenta     yellow      white"],["samples","04-dan-1    04-dan-2    04-dan-3    04-dan-4"],["blots","triangle    dots        triangle    square"]]'
+  data-apage-front='[["points",".5 .3  1 0  .75 .7  .9 .9  .5 .8"],["bkgnd","#453"],["colors","cyan        magenta     yellow      white"],["samples","04-dan-1    04-dan-2    04-dan-3    04-dan-4"],["blots","triangle    dots        triangle    square"]]'
   data-apage-title="DMC’s Noizotron">
   <h1>DMC’s Noizotron</h1>
   <p>Ridiculous and terrible. Like Ivan.</p>
@@ -1544,7 +1557,7 @@ window.addEventListener('hashchange', onHashchange);
   data-apage-opath="/voice-set/05-george.md"
   data-apage-dname="_voice-set_"
   data-apage-order="5"
-  data-apage-front='[["points","5 6  2 3"],["bkgnd","#304"],["colors","gold          blue          gold         blue"],["samples","05-george-1   05-george-2   05-george-3  05-george-4"],["blots","galaxy        dots          galaxy       dots"]]'
+  data-apage-front='[["points",".5 .3  1 0  .75 .7  .9 .9  .5 .8"],["bkgnd","#304"],["colors","gold          blue          gold         blue"],["samples","05-george-1   05-george-2   05-george-3  05-george-4"],["blots","galaxy        dots          galaxy       dots"]]'
   data-apage-title="Anything">
   <h1>Anything</h1>
   <p>A bit of everything.</p>
@@ -1557,7 +1570,7 @@ window.addEventListener('hashchange', onHashchange);
   data-apage-opath="/voice-set/06-seamus.md"
   data-apage-dname="_voice-set_"
   data-apage-order="6"
-  data-apage-front='[["points","5 6  2 3"],["bkgnd","#014"],["colors","blue         red          gold"],["samples","06-seamus-1  06-seamus-2  06-seamus-3"],["blots","square       oddtriangle  triangle"]]'
+  data-apage-front='[["points",".5 .3  1 0  .75 .7  .9 .9  .5 .8"],["bkgnd","#014"],["colors","blue         red          gold"],["samples","06-seamus-1  06-seamus-2  06-seamus-3"],["blots","square       oddtriangle  triangle"]]'
   data-apage-title="Bikes n Beer">
   <h1>Bikes n Beer</h1>
   <p>Hit the gangs of Brighton.</p>
@@ -1570,7 +1583,7 @@ window.addEventListener('hashchange', onHashchange);
   data-apage-opath="/voice-set/07-sandeep.md"
   data-apage-dname="_voice-set_"
   data-apage-order="7"
-  data-apage-front='[["points","1 2  3 4  3 8  1 7"],["bkgnd","#420"],["colors","pink            blue            purple"],["samples","07-sandeep-1    07-sandeep-2    07-sandeep-3"],["blots","dots            triangle        galaxy"]]'
+  data-apage-front='[["points",".5 .3  1 0  .75 .7  .9 .9  .5 .8"],["bkgnd","#420"],["colors","pink            blue            purple"],["samples","07-sandeep-1    07-sandeep-2    07-sandeep-3"],["blots","dots            triangle        galaxy"]]'
   data-apage-title="Sandeep Soundz">
   <h1>Sandeep Soundz</h1>
   <p>Taps and brush noise.</p>

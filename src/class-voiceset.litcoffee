@@ -159,16 +159,35 @@ Every two seconds, flip which Voice has focus, and quieten each Voice.
           @voices[@focus].hasFocus = true
           voice.quieten 0.8, 0.05 for voice in @voices
 
+Use the first two `points` to begin the clipping path. 
+
+        @visualizer.beginPath()
+        @visualizer.moveTo @points[0] * @size, @points[1] * @size
+        l = @points.length
+
+Draw the right-half of the clipping path. 
+
+        i = 2
+        while i < l
+          @visualizer.lineTo @points[i++] * @size, @points[i++] * @size
+
+Draw the left-half of the clipping path. 
+
+        i = l - 3
+        while i > 0
+          y = @points[i--] * @size * .95
+          @visualizer.lineTo (1 - @points[i--]) * @size, y
+
+Clip the image. 
+
+        @visualizer.clip()
+
 Clear all previously rendered pixels in the visualizer canvas. 
 
         @visualizer.clearRect 0, 0, @size, @size
         @visualizer.fillStyle = @bkgnd
         @visualizer.fillRect 0, 0, @size, @size
         @visualizer.globalCompositeOperation = 'screen' #@todo why set this every frame?
-
-ctx.beginPath();
-ctx.arc(0,0,60,0,Math.PI*2,true);
-ctx.clip();
 
 Allow each voice to update its own icon, and draw on the visualizer canvas. 
 
@@ -197,9 +216,6 @@ Flip the canvas and render again.
 Reset the canvas transform. 
 
         @visualizer.setTransform 1, 0, 0, 1, 0, 0
-
-Clear the outer-parts of the visualizer canvas, to reveal the image. @todo
-
 
 
 
