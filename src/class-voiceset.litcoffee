@@ -28,6 +28,12 @@ Matches the id attribute of this instance’s corresponding `<ARTICLE>` element.
         @ID = config.$voiceSet.id
 
 
+#### `allVoices <Main>`
+Xx. 
+
+        @allVoices = config.allVoices
+
+
 #### `focus <integer>`
 Index of the Voice in `@voices` which currently has focus. 
 
@@ -97,13 +103,15 @@ The /voice-set/*.md frontmatter defines the VoiceSet’s voices.
         @voices = []
         i = @colors.length
         while i--
-          @voices.push new Voice
+          voice = new Voice
             $voiceSet:    config.$voiceSet
             color:        @colors[i]
             sample:       @samples[i]
             blotRenderer: Blot[ @blots[i] ]
             visualizer:   @visualizer
             maestro:      @maestro
+          @voices.push voice
+          @allVoices.push voice
 
 Give the first voice focus. When a VoiceSet is 'active', microphone and 
 keyboard events are passed to its focused voice. 

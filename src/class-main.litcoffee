@@ -19,7 +19,7 @@ Properties
 #### `audioCtx <AudioContext>`
 Xx. @todo describe
 
-        @audioCtx = new (window.AudioContext || window.webkitAudioContext)
+        @audioCtx = @initCtxAudio()
 
 
 #### `active <integer>`
@@ -39,6 +39,13 @@ Create an animation controller.
 
         @maestro = new Maestro
           audioCtx:  @audioCtx
+
+
+#### `allVoices <array>`
+Contains a reference all `Voice` instances, in the order they were created. 
+Helpful for mapping `keyCode` to voice. 
+
+        @allVoices = []
 
 
 #### `$$voiceSets <live HTMLCollection>`
@@ -88,6 +95,20 @@ Methods
 -------
 
 
+#### `initCtxAudio()`
+
+Xx. @todo describe
+
+      initCtxAudio: ->
+        ctxAudio = window.AudioContext || window.webkitAudioContext
+        if ! ctxAudio
+          alert 'Your browser does not support Web Audio, please upgrade. ' #@todo more graceful alert
+          throw new Error '`AudioContext || webkitAudioContext` is falsey'
+        new ctxAudio
+
+
+
+
 #### `initVoiceSets()`
 
 Xx. @todo describe
@@ -111,6 +132,7 @@ Instantiate a VoiceSet instance for each /voice-set/*.md file.
               $voiceSet: $voiceSet
               front:     front
               maestro:   @maestro
+              allVoices: @allVoices
 
 Create a chain of `previous` and `next` references between VoiceSets, which 
 will help us respond to `left` and `right` arrow keys. @todo and an automatic processions mode @todo move into Akaybe function
@@ -221,6 +243,12 @@ The number keys `1` to `9` select VoiceSets at index `0` to `8`.
 
           if 97 <= event.keyCode && 105 >= event.keyCode
             @simulateClick @voiceSets[ event.keyCode - 96 - 1 ]?.$canvas
+
+Letter keys are each assigned a Voice, which they trigger when pressed. 
+
+          allVoicesIndex = ªkeymaps.qwerty.k2l[event.keyCode]?[2] #@todo non-QWERTY keyboard layouts
+          if ªN == typeof allVoicesIndex
+            @allVoices[allVoicesIndex].trigger 1 # `1` is maximum velocity
 
 Other keypress events depend on a VoiceSet being active. 
 

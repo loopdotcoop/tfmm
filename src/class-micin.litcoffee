@@ -66,7 +66,19 @@ Xx.
         navigator.getUserMedia(
           { audio: true, video: false }, # constraints
           @initStream,
-          (error) -> throw new Error '`getUserMedia()` error: ' + error
+          (error) ->
+
+In some browsers, `getUserMedia()` calls the error-callback when the user 
+dismisses the popup. We should not treat that as a breaking-error. 
+
+@todo Chrome and Firefox [test others] send a PermissionDeniedError if the user 
+has ever clicked ‘Block’ (Chrome) or selected ‘Never Share’ (Firefox)... 
+how do we tell a user what has happened, and let them unblock if they want to? 
+
+            if /^Permission(Dismissed|Denied)Error$/.test error.name
+              ª "`getUserMedia()` got a '#{error.name}'"
+            else
+              throw new Error '`getUserMedia()` error: ' + error.name
         )
 
 
