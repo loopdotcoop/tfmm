@@ -37,7 +37,7 @@ Xx.
 
     Blot.square = (time, velocity, ctx2d, size) ->
       scale = size * velocity * (1-time)
-      topleft = (size - scale) / 2
+      topleft = (size - scale) / 4
       ctx2d.fillRect topleft, topleft, scale, scale
 
     Blot.circle = (time, velocity, ctx2d, size) ->

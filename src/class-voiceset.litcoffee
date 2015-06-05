@@ -165,6 +165,30 @@ Allow each voice to update its own icon, and draw on the visualizer canvas.
 
         voice.render frame, @size for voice in @voices
 
+Flip the canvas and render again. 
+
+        #imageData = @visualizer.getImageData 0, 0, @size, @size
+        #@visualizer.putImageData imageData, 100, 0
+        #@visualizer.scale -1, 1
+        #@visualizer.translate 0, 0
+
+        @visualizer.setTransform(
+          -1, # scaling in the X-direction
+           0, # skewing
+           0, # skewing
+           1, # scaling in the Y-direction
+           @size, # moving  in the X-direction
+           0, # moving  in the Y-direction
+        )
+
+        @visualizer.drawImage @$canvas, 0, 0
+        #@visualizer.translate (@size / 2), 0
+        #voice.render frame, @size for voice in @voices
+
+Reset the canvas transform. 
+
+        @visualizer.setTransform 1, 0, 0, 1, 0, 0
+
 Clear the outer-parts of the visualizer canvas, to reveal the image. @todo
 
 

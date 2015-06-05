@@ -51,7 +51,7 @@ Define public methods
 Xx. 
 
       initUserMedia: ->
-
+        return #@todo remove this line
 Polyfill for legacy browsers’ `getUserMedia()` implementations. 
 
         navigator.getUserMedia = (navigator.getUserMedia ||
