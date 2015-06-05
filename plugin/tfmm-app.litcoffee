@@ -16,11 +16,15 @@ Inject CSS
 
     /* injected by the TfmmApp plugin */
     @import url(http://fonts.googleapis.com/css?family=Podkova:400,700);
+    html {
+      height: 100%;
+      background: #111 url(asset/image/tfmm-main-bkgnd.jpg) 100% 100% no-repeat;
+      background-size: cover;
+    }
     body {
       overflow: hidden;
       text-align: center;
       padding-top: 2em;
-      background: #111;
       color: #ccc;
       font-family: Podkova, Arial, sans-serif; 
     }
@@ -90,8 +94,8 @@ Inject CSS
       display: inline-block;
       opacity: 0; /* becomes `1` when preload is complete */
       vertical-align: top;
-      width: 8em;
-      height: 8em;
+      width: 8rem;
+      height: 8rem;
       cursor: pointer;
       border-top:    8px solid rgba(255,255,255,.4);
       transition: all .5s;
@@ -101,8 +105,8 @@ Inject CSS
     }
     article[data-apage-dname="_voice-set_"].active {
       border-top:    0px solid rgba(255,255,255,0);
-      width: 40em;
-      height: 40em;
+      width: 40rem;
+      height: 40rem;
     }
     article[data-apage-dname="_voice-set_"].active:hover {
       background-color: rgba(255,255,255,0);
@@ -114,8 +118,9 @@ Inject CSS
     article[data-apage-dname="_voice-set_"] h1,
     article[data-apage-dname="_voice-set_"] p {
       position: absolute;
-      text-align: left;
+      width: 8rem;
       opacity: 0;
+      text-align: center;
       transition: all .5s;
     }
     article[data-apage-dname="_voice-set_"] h1 {
@@ -127,10 +132,12 @@ Inject CSS
       font-size: 4px;
     }
     article[data-apage-dname="_voice-set_"].active h1 {
+      width: 40rem;
       font-size: 80px;
       opacity: .8;
     }
     article[data-apage-dname="_voice-set_"].active p {
+      width: 40rem;
       font-size: 40px;
       opacity: .9;
     }

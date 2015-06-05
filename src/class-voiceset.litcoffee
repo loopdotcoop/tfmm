@@ -52,6 +52,12 @@ Xx. @todo
         @points = config.front.points.split /\s+/
 
 
+#### `bkgnd <string>`
+The background color to use for this VoiceSet. @todo
+
+        @bkgnd = config.front.bkgnd
+
+
 #### `colors <array>`
 Each Voice is given one canvas-friendly color, eg 'red  rgba(0,255,0,0.5)'. 
 
@@ -145,21 +151,24 @@ Xx.
 
       render: (frame) ->
 
-Clear all previously rendered pixels in the visualizer canvas. 
-
-        @visualizer.clearRect 0, 0, @size, @size
-        @visualizer.globalCompositeOperation = 'screen' #@todo why set this every frame?
-
-Every two seconds, flip which Voice has focus. 
+Every two seconds, flip which Voice has focus, and quieten each Voice. 
 
         if frame.flip2000
           voice.hasFocus = false for voice in @voices
           if @voices.length <= ++@focus then @focus = 0
           @voices[@focus].hasFocus = true
-
-Every two seconds, quieten each Voice. 
-
           voice.quieten 0.8, 0.05 for voice in @voices
+
+Clear all previously rendered pixels in the visualizer canvas. 
+
+        @visualizer.clearRect 0, 0, @size, @size
+        @visualizer.fillStyle = @bkgnd
+        @visualizer.fillRect 0, 0, @size, @size
+        @visualizer.globalCompositeOperation = 'screen' #@todo why set this every frame?
+
+ctx.beginPath();
+ctx.arc(0,0,60,0,Math.PI*2,true);
+ctx.clip();
 
 Allow each voice to update its own icon, and draw on the visualizer canvas. 
 
