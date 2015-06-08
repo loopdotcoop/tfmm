@@ -87,6 +87,12 @@ Each Voice is given a Blot rendering function, eg `Blot.dots()`.
         @blotRenderer = config.blotRenderer
 
 
+#### `duration <number>`
+Each Voice has a duration, from 0 to 1, as a proportion of `frac8000`. 
+
+        @duration = + config.duration
+
+
 
 
 Define public methods
@@ -143,9 +149,10 @@ Xx.
 Add a Flourish to the `flourishes` list, and play the sample. 
 
       trigger: (velocity) ->
+        ª @duration
         @flourishes.push new Flourish
           start:        @now.frac2000
-          duration:     0.2
+          duration:     @duration
           velocity:     velocity
           voice:        @
           blotRenderer: @blotRenderer

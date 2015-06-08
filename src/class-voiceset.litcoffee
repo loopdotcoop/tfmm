@@ -76,6 +76,12 @@ Each Voice is given a Blot rendering style, eg 'square' or 'dots'.
         @blots = config.front.blots.split /\s+/
 
 
+#### `durations <array>`
+Each Voice has a duration, from 0 to 1, as a proportion of `frac8000`. 
+
+        @durations = config.front.durations.split /\s+/
+
+
 Validate values taken from /voice-set/*.md frontmatter. 
 
         if 5 < @colors.length then throw new Error "
@@ -114,6 +120,7 @@ The /voice-set/*.md frontmatter defines the VoiceSet’s voices.
             color:        @colors[i]
             sample:       @samples[i]
             blotRenderer: Blot[ @blots[i] ]
+            duration:     @durations[i]
             visualizer:   @visualizer
             maestro:      @maestro
           @voices.push voice
@@ -161,26 +168,26 @@ Every two seconds, flip which Voice has focus, and quieten each Voice.
 
 Use the first two `points` to begin the clipping path. 
 
-        @visualizer.beginPath()
-        @visualizer.moveTo @points[0] * @size, @points[1] * @size
-        l = @points.length
+        #@visualizer.beginPath()
+        #@visualizer.moveTo @points[0] * @size, @points[1] * @size
+        #l = @points.length
 
 Draw the right-half of the clipping path. 
 
-        i = 2
-        while i < l
-          @visualizer.lineTo @points[i++] * @size, @points[i++] * @size
+        #i = 2
+        #while i < l
+        #  @visualizer.lineTo @points[i++] * @size, @points[i++] * @size
 
 Draw the left-half of the clipping path. 
 
-        i = l - 3
-        while i > 0
-          y = @points[i--] * @size * .95
-          @visualizer.lineTo (1 - @points[i--]) * @size, y
+        #i = l - 3
+        #while i > 0
+        #  y = @points[i--] * @size * .95
+        #  @visualizer.lineTo (1 - @points[i--]) * @size, y
 
 Clip the image. 
 
-        @visualizer.clip()
+        #@visualizer.clip()
 
 Clear all previously rendered pixels in the visualizer canvas. 
 
