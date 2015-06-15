@@ -206,7 +206,7 @@ Note `=>` because `onLoadComplete()` is called from the AssetManager’s context
         if error
           ª error
         else
-          document.body.setAttribute 'class', 'complete'
+          document.body.className = 'complete ' + document.body.className
           @enableUserInput()
           @maestro.start()
 
@@ -301,12 +301,14 @@ Xx. @todo describe
 Deactivate the previously active VoiceSet (in fact, deactivate all VoiceSets). 
 
         @active = null
+        document.body.className = document.body.className.replace /( )?voice-set/g, ''
         for voiceSet in @voiceSets
           if voiceSet.deactivate then voiceSet.deactivate() #@todo create `MicIn.deactivate()`
 
 Activate the newly active VoiceSet. 
 
         if current.voiceSet
+          document.body.className = document.body.className + ' voice-set'
           @active = current.voiceSet
           @active.activate()
 

@@ -18,23 +18,37 @@ Inject CSS
     @import url(http://fonts.googleapis.com/css?family=Podkova:400,700);
     html {
       height: 100%;
-      background: #111 url(asset/image/tfmm-main-bkgnd.jpg) 100% 100% no-repeat;
+      background: #111 url(asset/image/tfmm-main-bkgnd-v2.jpg) no-repeat;
       background-size: cover;
     }
     body {
+      position: absolute;
+      top:    0;
+      bottom: 0;
+      left:   0;
+      right:  0;
       overflow: hidden;
       text-align: center;
-      padding-top: 2em;
-      color: #ccc;
-      font-family: Podkova, Arial, sans-serif; 
+      color: rgba(255,243,51,1);
+      font-family: "Podkova", Arial, sans-serif; 
+      /* background-color: rgba(0,0,0,0); */
+      transition: background 1s;
+    }
+    body.voice-set {
+      /*background-color: rgba(0,0,0,0.5);*/
+      background: #111 url(asset/image/tfmm-main-bkgnd-dark-v2.jpg) no-repeat;
+      background-size: cover;
+    }
+    h1 {
+      text-shadow: -0.05em 0 0 rgba(255,78,38,1);
     }
     a {
-      color: #ccc;
+      color: rgba(255,243,51,1);
       text-decoration: none;
       transition: all .5s;
     }
     a:hover {
-      color: #f2f;
+      color: rgba(255,78,38,1);
     }
     article {
       display: none;
@@ -53,15 +67,32 @@ Inject CSS
     #apage_readme li a {
       position: absolute;
       z-index: 99;
-      padding: .5em;
+    }
+    #apage_readme h4 a,
+    #apage_readme li a[href="http://loop.coop"] {
+      display: block;
+      top:    1rem;
+      font: 0/0 a!important; /* hide text */
+      color: transparent!important; /* hide text */
+      opacity: 0.8;
     }
     #apage_readme h4 a {
-      top:    0;
-      right:  0;
+      right:  1rem;
+      width:  267px;
+      height: 88px;
+      background: url(asset/image/tfmm-logo-800x264.png) no-repeat;
+      background-size: contain;
     }
     #apage_readme li a[href="http://loop.coop"] {
-      top:    0;
-      left:   0;
+      left:   1rem;
+      width:  200px;
+      height: 42px;
+      background: url(asset/image/tfmm-ldc-logo-266x56.png) no-repeat;
+      background-size: contain;
+    }
+    #apage_readme h4 a:hover,
+    #apage_readme li a[href="http://loop.coop"]:hover {
+      opacity: 1;
     }
     #apage_readme li a[href*="www.facebook.com"] {
       bottom: 0;
@@ -97,18 +128,20 @@ Inject CSS
       width: 8rem;
       height: 8rem;
       cursor: pointer;
+      border-radius: 50%;
+      overflow: hidden;
       transition: all .5s;
     }
     article[data-apage-dname="_voice-set_"]:hover {
-      background-color: rgba(255,255,255,0.1);
+      background-color: rgba(255,243,51,0.1);
     }
     article[data-apage-dname="_voice-set_"].active {
-      border-top:    0px solid rgba(255,255,255,0);
+      border-top:    0px solid rgba(255,243,51,0);
       width: 40rem;
       height: 40rem;
     }
     article[data-apage-dname="_voice-set_"].active:hover {
-      background-color: rgba(255,255,255,0);
+      background-color: rgba(255,243,51,0);
     }
     article[data-apage-dname="_voice-set_"] canvas.visualizer {
       width: 100%;
@@ -123,11 +156,11 @@ Inject CSS
       transition: all .5s;
     }
     article[data-apage-dname="_voice-set_"] h1 {
-      margin-top: 0;
+      margin-top: 40%;
       font-size: 8px;
     }
     article[data-apage-dname="_voice-set_"] p {
-      margin-top: 2em;
+      margin-top: 53%;
       font-size: 4px;
     }
     article[data-apage-dname="_voice-set_"].active h1 {
