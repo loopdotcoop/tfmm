@@ -129,6 +129,7 @@ The /voice-set/*.md frontmatter defines the VoiceSet’s voices.
             duration:     @durations[i]
             visualizer:   @visualizer
             maestro:      @maestro
+            allVoices:    @allVoices
           @voices.push voice
           @allVoices.push voice
 
@@ -153,16 +154,16 @@ Xx.
         @size = 512
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
-        @$voiceSet.setAttribute 'width' , @size + 'px'
-        @$voiceSet.setAttribute 'height', @size + 'px'
+        #@$voiceSet.setAttribute 'width' , @size + 'px'
+        #@$voiceSet.setAttribute 'height', @size + 'px'
         voice.activate() for voice in @voices
 
       deactivate: ->
         @size = 128
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
-        @$voiceSet.setAttribute 'width' , @size + 'px'
-        @$voiceSet.setAttribute 'height', @size + 'px'
+        #@$voiceSet.setAttribute 'width' , @size + 'px'
+        #@$voiceSet.setAttribute 'height', @size + 'px'
         voice.deactivate() for voice in @voices
 
 

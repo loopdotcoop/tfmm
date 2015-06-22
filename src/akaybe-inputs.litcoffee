@@ -56,6 +56,15 @@ Bottom row of keys, `Z` to `M`.
           78: [5,2,24]
           77: [6,2,25]
 
+Generate a reverse-lookup, of index to key character. 
+
+    ªkeymaps.qwerty.i2c = []
+    for keyCode,[col,row,i] of ªkeymaps.qwerty.k2l
+      ªkeymaps.qwerty.i2c[i] = String.fromCharCode keyCode
+
+    ª ªkeymaps.qwerty.i2c
+
+
 @todo duplicate `qwerty` and modify it for other layouts. 
 See http://en.wikipedia.org/wiki/Keyboard_layout
 

@@ -10,4 +10,4 @@ durations: 0.2          0.2          0.2
 Bikes n Beer
 ============
 
-Hit the gangs of Brighton. 
+Biker gangs of Brighton

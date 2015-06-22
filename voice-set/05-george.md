@@ -10,4 +10,4 @@ durations: 0.2           0.2           0.2           0.2
 Anything
 ========
 
-A bit of everything.
+A bit of everything, really

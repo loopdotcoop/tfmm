@@ -5,7 +5,10 @@ TfmmApp
 
 @todo longer discussion
 
-
+@todo update Apage so it collects `@import` statements and renders them all before any other CSS
+@todo remove hack from node_modules/apage/build/apage.js:432:240
+@todo remove hack from node_modules/apage/build/apage.js:432:447
+@todo remove hack from node_modules/apage/build/apage.js:438:73
 
 
 Inject CSS
@@ -15,7 +18,6 @@ Inject CSS
      .innerHTML += """
 
     /* injected by the TfmmApp plugin */
-    @import url(http://fonts.googleapis.com/css?family=Podkova:400,700);
     html {
       height: 100%;
       background: #111 url(asset/image/tfmm-main-bkgnd-v2.jpg) no-repeat;
@@ -36,11 +38,8 @@ Inject CSS
     }
     body.voice-set {
       /*background-color: rgba(0,0,0,0.5);*/
-      background: #111 url(asset/image/tfmm-main-bkgnd-dark-v2.jpg) no-repeat;
+      /* background: #111 url(asset/image/tfmm-main-bkgnd-dark-v2.jpg) no-repeat; */
       background-size: cover;
-    }
-    h1 {
-      text-shadow: -0.05em 0 0 rgba(255,78,38,1);
     }
     a {
       color: rgba(255,243,51,1);
@@ -53,7 +52,6 @@ Inject CSS
     article {
       display: none;
     }
-    article.active,
     #apage_readme {
       display: block;
     }
@@ -120,26 +118,23 @@ Inject CSS
     }
 
     article[data-apage-dname="_voice-set_"] {
-      position: relative;
-      z-index: 55;
-      display: inline-block;
-      opacity: 0; /* becomes `1` when preload is complete */
-      vertical-align: top;
-      width: 8rem;
-      height: 8rem;
+      /* position: relative;    */ /* Use Actile style instead */
+      /* z-index: 55;           */ /* Use Actile style instead */
+      /* display: inline-block; */ /* Use Actile style instead */
+      /* vertical-align: top;   */ /* Use Actile style instead */
+      /* width: 8rem;           */ /* Use Actile style instead */
+      /* height: 8rem;          */ /* Use Actile style instead */
+      /* transition: all .5s;   */ /* Use Actile style instead */
       cursor: pointer;
-      border-radius: 1em;
       overflow: hidden;
-      transition: all .5s;
+      opacity: 0; /* becomes `1` when preload is complete */
     }
     article[data-apage-dname="_voice-set_"]:hover {
       background-color: rgba(255,243,51,0.1);
     }
     article[data-apage-dname="_voice-set_"].active {
-      border-top:    0px solid rgba(255,243,51,0);
-      width: 40rem;
-      height: 40rem;
-      border-radius: 3em;
+      /* width: 40rem;          */ /* Use Actile style instead */
+      /* height: 40rem;         */ /* Use Actile style instead */
     }
     article[data-apage-dname="_voice-set_"].active:hover {
       background-color: rgba(255,243,51,0);
@@ -151,40 +146,49 @@ Inject CSS
     article[data-apage-dname="_voice-set_"] h1,
     article[data-apage-dname="_voice-set_"] p {
       position: absolute;
-      width: 8rem;
-      opacity: 0;
+      left: 0;
+      right: 0;
       text-align: center;
       transition: all .5s;
     }
     article[data-apage-dname="_voice-set_"] h1 {
-      margin-top: 40%;
-      font-size: 8px;
-    }
-    article[data-apage-dname="_voice-set_"] p {
-      margin-top: 53%;
-      font-size: 4px;
-    }
-    article[data-apage-dname="_voice-set_"].active h1 {
-      width: 40rem;
-      font-size: 80px;
+      bottom: 12%;
+      font-size: 110px;
       opacity: .8;
     }
-    article[data-apage-dname="_voice-set_"].active p {
-      width: 40rem;
+    article[data-apage-dname="_voice-set_"] p {
+      bottom: 11%;
       font-size: 40px;
+      opacity: 0;
+    }
+    article[data-apage-dname="_voice-set_"].active h1 {
+      text-shadow: -0.05em 0 0 rgba(255,78,38,1);
+    }
+    article[data-apage-dname="_voice-set_"].active p {
       opacity: .9;
     }
+
+    article[data-apage-dname="_voice-set_"] h2.label {
+      position:  relative;
+      display:   inline-block;
+      bottom:    20%;
+      width:     2rem;
+      height:    10rem;
+      left:      5%;
+      font-size: 90px;
+    }
     article[data-apage-dname="_voice-set_"] canvas.icon {
-      display: inline-block;
-      margin:  -2em .2em 0 .2em;
-      width:  1em;
-      height: 1em;
-      transition: all .5s;
+      position:  relative;
+      display:   inline-block;
+      bottom:    24%;
+      width:     6rem;
+      height:    4rem;
+    }
+    article[data-apage-dname="_voice-set_"].active h2.label {
     }
     article[data-apage-dname="_voice-set_"].active canvas.icon {
-      margin:  -10em 1em 0 1em;
-      width:   5em;
-      height:  5em;
+      width:     7rem;
+      height:    7rem;
     }
 
     body.complete article[data-apage-dname="_voice-set_"] {

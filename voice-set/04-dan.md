@@ -10,4 +10,4 @@ durations: 0.2         0.2         0.2         0.2
 DMC’s Noizotron
 ===============
 
-Ridiculous and terrible. Like Ivan. 
+Ivan the ridiculous

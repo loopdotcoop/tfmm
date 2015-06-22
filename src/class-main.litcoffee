@@ -312,6 +312,15 @@ Activate the newly active VoiceSet.
           @active = current.voiceSet
           @active.activate()
 
+Modify class names for Actile. 
+
+        $element  = $ '#' + current.id
+        className = if $element then $element.className else ''
+        match     = className.match /^(\S*\s+)*tile-(\d+)(\s+\S*)*$/
+        digits    = if match then match[2] else ''
+        document.body.className = document.body.className.replace /act-\d*/g, 'act-' + digits # @todo more robust
+        ª current
+
 
 
 

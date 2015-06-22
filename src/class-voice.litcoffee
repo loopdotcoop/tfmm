@@ -46,6 +46,22 @@ The current width and height for the icon `@$canvas` (which is always square).
         @size = 16
 
 
+#### `color <string>`
+The icon fill-color for this Voice. Note that we set the icon color here. 
+
+        @color = config.color
+
+
+#### `$label <HTMLH2Element>`
+An `<H2>` element containing the keyboard character which activates this Voice. 
+
+        @$label = document.createElement 'h2'
+        @$label.setAttribute 'class', 'label'
+        @$label.setAttribute 'style', 'color: ' + @color
+        @$label.innerHTML = ªkeymaps.qwerty.i2c[config.allVoices.length]
+        config.$voiceSet.appendChild @$label
+
+
 #### `$canvas <HTMLCanvasElement>`
 A `<CANVAS>` element to draw an icon on, and receive click/touch events. 
 
@@ -60,18 +76,13 @@ A `<CANVAS>` element to draw an icon on, and receive click/touch events.
 A reference to the drawing-context of the icon `<CANVAS>`. 
 
         @icon = @$canvas.getContext '2d'
+        @icon.fillStyle = config.color
 
 
 #### `visualizer <CanvasRenderingContext2D>`
 A reference to the drawing-context of the VoiceSet’s visualizer `<CANVAS>`. 
 
         @visualizer = config.visualizer
-
-
-#### `color <string>`
-The icon fill-color for this Voice. Note that we set the icon color here. 
-
-        @color = @icon.fillStyle = config.color
 
 
 #### `sample <Asset>`

@@ -10,4 +10,4 @@ durations: 0.2             0.2             0.2
 Sandeep Soundz
 ==============
 
-Taps and brush noise. 
+Taps and brush noise
