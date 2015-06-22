@@ -128,7 +128,7 @@ Inject CSS
       width: 8rem;
       height: 8rem;
       cursor: pointer;
-      border-radius: 50%;
+      border-radius: 1em;
       overflow: hidden;
       transition: all .5s;
     }
@@ -139,6 +139,7 @@ Inject CSS
       border-top:    0px solid rgba(255,243,51,0);
       width: 40rem;
       height: 40rem;
+      border-radius: 3em;
     }
     article[data-apage-dname="_voice-set_"].active:hover {
       background-color: rgba(255,243,51,0);

@@ -149,7 +149,6 @@ Xx.
 Add a Flourish to the `flourishes` list, and play the sample. 
 
       trigger: (velocity) ->
-        ª @duration
         @flourishes.push new Flourish
           start:        @now.frac2000
           duration:     @duration

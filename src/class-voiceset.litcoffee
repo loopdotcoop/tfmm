@@ -92,14 +92,20 @@ Validate values taken from /voice-set/*.md frontmatter.
           '#{@ID}' frontmatter contains unequal colors and blots"
 
 
-#### `canvas <HTMLCanvasElement>`
+#### `$voiceSet <HTMLArticleElement>`
+A reference to the `<ARTICLE>` element which represents this VoiceSet. 
+
+        @$voiceSet = config.$voiceSet
+
+
+#### `$canvas <HTMLCanvasElement>`
 A `<CANVAS>` element to draw the VoiceSet’s visualizer on. 
 
         @$canvas = document.createElement 'canvas'
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
         @$canvas.setAttribute 'class', 'visualizer'
-        config.$voiceSet.appendChild @$canvas
+        @$voiceSet.appendChild @$canvas
 
 
 #### `visualizer <CanvasRenderingContext2D>`
@@ -141,15 +147,22 @@ Define public methods
 Xx. 
 
       activate: ->
+        [w,h] = vpSize()
+        @size = (Math.min w, h) - 20
+        ª w, h, @size #@todo fix this
         @size = 512
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
+        @$voiceSet.setAttribute 'width' , @size + 'px'
+        @$voiceSet.setAttribute 'height', @size + 'px'
         voice.activate() for voice in @voices
 
       deactivate: ->
         @size = 128
         @$canvas.setAttribute 'width' , @size + 'px'
         @$canvas.setAttribute 'height', @size + 'px'
+        @$voiceSet.setAttribute 'width' , @size + 'px'
+        @$voiceSet.setAttribute 'height', @size + 'px'
         voice.deactivate() for voice in @voices
 
 

@@ -1,6 +1,6 @@
 {
   "name": "tfmm",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "license": "MIT",
   "homepage": "http://tfmm.loop.coop/",
   "author": "Rich Plastow <rich@loop.coop> (http://loop.coop/)",
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "hi": "open .; open index.html; open test/run-test.html; subl .",
-    "build": "node bin/akaybe-build --watch doc voice-set --plugin --npm index",
+    "make": "node bin/akaybe-build --watch doc voice-set --plugin --npm index",
     "test": "node test/run-test.js",
     "index": "node_modules/apage/bin/apage -i README.md doc/*.md voice-set/*.md -o index.html -t Tfmm -p \"`cat node_modules/apage/build/plugin/cross-browser.js node_modules/apage/build/plugin/pagination.js build/tfmm.js build/plugin/*.js`\"",
     "v:list": "grep -ron $npm_package_version {bin,src,*.json} | awk 1 ORS=' ' | sed \"s@:$npm_package_version@@g\"",
